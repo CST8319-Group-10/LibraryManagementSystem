@@ -1,4 +1,4 @@
-package com.cst8319.lms;
+package com.ac.cst8319.lms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
