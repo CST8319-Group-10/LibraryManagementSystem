@@ -4,11 +4,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 
-import jakarta.persistence.*;
 
 import lombok.*;
 
-@Entity(name = "Checkout")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,8 +14,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class Checkout {
-    @Id
-    @GeneratedValue
     private long checkoutId;
     private long loanedTo;
     private long bookCopyId;

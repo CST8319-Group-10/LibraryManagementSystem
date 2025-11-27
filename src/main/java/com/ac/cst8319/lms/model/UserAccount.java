@@ -2,11 +2,8 @@ package com.ac.cst8319.lms.model;
 
 import java.time.Instant;
 
-import jakarta.persistence.*;
-
 import lombok.*;
 
-@Entity(name = "UserAccount")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,8 +11,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class UserAccount {
-    @Id
-    @GeneratedValue
     private long userId;
     private String email;
     private String passwordHash;

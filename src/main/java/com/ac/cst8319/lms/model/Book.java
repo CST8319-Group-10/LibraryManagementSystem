@@ -2,11 +2,9 @@ package com.ac.cst8319.lms.model;
 
 import java.time.Instant;
 
-import jakarta.persistence.*;
 
 import lombok.*;
 
-@Entity(name = "Book")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,8 +12,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class Book {
-    @Id
-    @GeneratedValue
     private long bookId;
     private String isbn;
     private String title;
