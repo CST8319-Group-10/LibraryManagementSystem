@@ -2,11 +2,9 @@ package com.ac.cst8319.lms.model;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.*;
 
 import lombok.*;
 
-@Entity(name = "BookCopy")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,8 +12,6 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 public class BookCopy {
-    @Id
-    @GeneratedValue
     private long bookCopyId;
     private long bookId;
     private int statusId;
