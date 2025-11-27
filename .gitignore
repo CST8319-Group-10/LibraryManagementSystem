@@ -33,6 +33,9 @@ build/
 .vscode/
 mysql_scripts/lms.mwb.bak
 
+### macOS ###
+.DS_Store
+
 # Compiled class file
 *.class
 
