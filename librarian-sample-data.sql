@@ -1,0 +1,151 @@
+-- =============================================
+-- Library Management System - Librarian Sample Data
+-- =============================================
+-- This script populates the database with sample data for testing the Librarian Dashboard features.
+-- Execute this script after the main database schema has been created.
+
+USE lms;
+
+-- =============================================
+-- 1. INSERT AUTHORS
+-- =============================================
+INSERT IGNORE INTO Author (AuthorID, FirstName, LastName, Biography, CreatedAt, UpdatedAt) VALUES
+(1, 'J.K.', 'Rowling', 'British author best known for the Harry Potter series', NOW(), NOW()),
+(2, 'George', 'Orwell', 'English novelist and essayist, known for 1984 and Animal Farm', NOW(), NOW()),
+(3, 'Jane', 'Austen', 'English novelist known for her six major novels', NOW(), NOW());
+
+-- =============================================
+-- 2. INSERT GENRES
+-- =============================================
+INSERT IGNORE INTO Genre (Name, Description) VALUES
+('Fiction', 'Literary works of imaginative narration'),
+('Science Fiction', 'Fiction dealing with futuristic science and technology'),
+('Fantasy', 'Fiction involving magic and adventure'),
+('Classic', 'Literature of recognized excellence and lasting significance');
+
+-- =============================================
+-- 3. INSERT BOOK STATUSES
+-- =============================================
+INSERT IGNORE INTO BookStatus (Name, Description) VALUES
+('Available', 'Book copy is available for checkout'),
+('Checked Out', 'Book copy is currently checked out'),
+('Damaged', 'Book copy is damaged and needs repair'),
+('Lost', 'Book copy has been reported lost');
+
+-- =============================================
+-- 4. INSERT BOOKS
+-- =============================================
+-- Get author IDs (assuming we just inserted them)
+SET @rowling_id = (SELECT AuthorID FROM Author WHERE LastName = 'Rowling' LIMIT 1);
+SET @orwell_id = (SELECT AuthorID FROM Author WHERE LastName = 'Orwell' LIMIT 1);
+SET @austen_id = (SELECT AuthorID FROM Author WHERE LastName = 'Austen' LIMIT 1);
+
+INSERT IGNORE INTO Book (ISBN, Title, AuthorID, GenreID, Publisher, PublicationYear, Description, CreatedAt, UpdatedAt, CreatedBy, UpdatedBy) VALUES
+('9780439708180', 'Harry Potter and the Sorcerer''s Stone', @rowling_id, 3, 'Scholastic', '1997', 'A young wizard begins his magical education', NOW(), NOW(), 1, 1),
+('9780439064873', 'Harry Potter and the Chamber of Secrets', @rowling_id, 3, 'Scholastic', '1998', 'Harry returns to Hogwarts for his second year', NOW(), NOW(), 1, 1),
+('9780545010221', 'Harry Potter and the Deathly Hallows', @rowling_id, 3, 'Scholastic', '2007', 'The final adventure in the Harry Potter series', NOW(), NOW(), 1, 1),
+('9780451524935', '1984', @orwell_id, 2, 'Signet Classic', '1949', 'A dystopian social science fiction novel', NOW(), NOW(), 1, 1),
+('9780451526342', 'Animal Farm', @orwell_id, 1, 'Signet Classic', '1945', 'A satirical allegorical novella', NOW(), NOW(), 1, 1),
+('9780141439518', 'Pride and Prejudice', @austen_id, 4, 'Penguin Classics', '1813', 'A romantic novel of manners', NOW(), NOW(), 1, 1),
+('9780141439662', 'Emma', @austen_id, 4, 'Penguin Classics', '1815', 'A novel about youthful hubris and romantic misunderstandings', NOW(), NOW(), 1, 1),
+('9780141439808', 'Sense and Sensibility', @austen_id, 4, 'Penguin Classics', '1811', 'A novel about the Dashwood sisters', NOW(), NOW(), 1, 1),
+('9780060850524', 'Brave New World', @orwell_id, 2, 'Harper Perennial', '1932', 'A dystopian novel set in a futuristic World State', NOW(), NOW(), 1, 1),
+('9780439358071', 'Harry Potter and the Order of the Phoenix', @rowling_id, 3, 'Scholastic', '2003', 'Harry''s fifth year at Hogwarts', NOW(), NOW(), 1, 1);
+
+-- =============================================
+-- 5. INSERT BOOK COPIES
+-- =============================================
+-- Get book IDs
+SET @hp1_id = (SELECT BookID FROM Book WHERE ISBN = '9780439708180' LIMIT 1);
+SET @hp2_id = (SELECT BookID FROM Book WHERE ISBN = '9780439064873' LIMIT 1);
+SET @hp7_id = (SELECT BookID FROM Book WHERE ISBN = '9780545010221' LIMIT 1);
+SET @orwell1984_id = (SELECT BookID FROM Book WHERE ISBN = '9780451524935' LIMIT 1);
+SET @orwell_af_id = (SELECT BookID FROM Book WHERE ISBN = '9780451526342' LIMIT 1);
+SET @austen_pp_id = (SELECT BookID FROM Book WHERE ISBN = '9780141439518' LIMIT 1);
+SET @austen_emma_id = (SELECT BookID FROM Book WHERE ISBN = '9780141439662' LIMIT 1);
+SET @austen_ss_id = (SELECT BookID FROM Book WHERE ISBN = '9780141439808' LIMIT 1);
+
+-- Harry Potter and the Sorcerer's Stone - 3 copies
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@hp1_id, 1, 'Shelf A-12', '2024-01-15'),
+(@hp1_id, 1, 'Shelf A-12', '2024-01-15'),
+(@hp1_id, 2, 'Shelf A-12', '2024-01-15');
+
+-- Harry Potter and the Chamber of Secrets - 2 copies
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@hp2_id, 1, 'Shelf A-13', '2024-01-15'),
+(@hp2_id, 1, 'Shelf A-13', '2024-01-15');
+
+-- Harry Potter and the Deathly Hallows - 2 copies
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@hp7_id, 1, 'Shelf A-14', '2024-02-01'),
+(@hp7_id, 1, 'Shelf A-14', '2024-02-01');
+
+-- 1984 - 3 copies
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@orwell1984_id, 1, 'Shelf B-05', '2024-01-10'),
+(@orwell1984_id, 1, 'Shelf B-05', '2024-01-10'),
+(@orwell1984_id, 1, 'Shelf B-05', '2024-01-10');
+
+-- Animal Farm - 2 copies
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@orwell_af_id, 1, 'Shelf B-06', '2024-01-10'),
+(@orwell_af_id, 2, 'Shelf B-06', '2024-01-10');
+
+-- Pride and Prejudice - 2 copies
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@austen_pp_id, 1, 'Shelf C-08', '2024-01-20'),
+(@austen_pp_id, 1, 'Shelf C-08', '2024-01-20');
+
+-- Emma - 1 copy
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@austen_emma_id, 1, 'Shelf C-09', '2024-01-20');
+
+-- Sense and Sensibility - 1 copy
+INSERT IGNORE INTO BookCopy (BookID, StatusID, Location, AcquisitionDate) VALUES
+(@austen_ss_id, 1, 'Shelf C-10', '2024-01-20');
+
+-- =============================================
+-- 6. INSERT SAMPLE CHECKOUTS (Optional)
+-- =============================================
+-- Note: You can add sample checkouts here if you have test user accounts
+-- This example assumes you have a registered user with UserID = 2
+
+-- Uncomment below if you want to add sample checkouts:
+-- SET @test_user_id = 2;  -- Replace with actual user ID
+-- SET @librarian_id = 3;  -- Replace with actual librarian ID
+-- SET @copy1 = (SELECT BookCopyID FROM BookCopy WHERE BookID = @hp1_id AND StatusID = 2 LIMIT 1);
+-- SET @copy2 = (SELECT BookCopyID FROM BookCopy WHERE BookID = @orwell_af_id AND StatusID = 2 LIMIT 1);
+
+-- INSERT INTO Checkout (LoanedTo, BookCopyID, CheckoutDate, DueDate, ReturnDate, CheckedOutBy, ReturnedBy, LateFeeAssessed, LateFeePaid, CreatedAt) VALUES
+-- (@test_user_id, @copy1, DATE_SUB(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 7 DAY), NULL, @librarian_id, NULL, NULL, FALSE, NOW()),
+-- (@test_user_id, @copy2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 9 DAY), NULL, @librarian_id, NULL, NULL, FALSE, NOW());
+
+-- =============================================
+-- VERIFICATION QUERIES
+-- =============================================
+-- Use these queries to verify the data was inserted correctly
+
+SELECT 'Authors Inserted:' AS Status, COUNT(*) AS Count FROM Author;
+SELECT 'Genres Inserted:' AS Status, COUNT(*) AS Count FROM Genre;
+SELECT 'Book Statuses Inserted:' AS Status, COUNT(*) AS Count FROM BookStatus;
+SELECT 'Books Inserted:' AS Status, COUNT(*) AS Count FROM Book;
+SELECT 'Book Copies Inserted:' AS Status, COUNT(*) AS Count FROM BookCopy;
+
+-- Show summary
+SELECT
+    b.Title,
+    CONCAT(a.FirstName, ' ', a.LastName) AS Author,
+    g.Name AS Genre,
+    COUNT(bc.BookCopyID) AS TotalCopies,
+    SUM(CASE WHEN bc.StatusID = 1 THEN 1 ELSE 0 END) AS AvailableCopies
+FROM Book b
+LEFT JOIN Author a ON b.AuthorID = a.AuthorID
+LEFT JOIN Genre g ON b.GenreID = g.GenreID
+LEFT JOIN BookCopy bc ON b.BookID = bc.BookID
+GROUP BY b.BookID, b.Title, a.FirstName, a.LastName, g.Name
+ORDER BY b.Title;
+
+-- =============================================
+-- END OF SCRIPT
+-- =============================================
