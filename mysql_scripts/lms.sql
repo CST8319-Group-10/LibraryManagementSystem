@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `lms`.`BookCopy` (
   `Location` VARCHAR(50) NULL DEFAULT NULL,
   `AcquisitionDate` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`BookCopyID`),
-  UNIQUE INDEX `uk_book_copy` (`BookID` ASC) VISIBLE,
+  INDEX `idx_book` (`BookID` ASC) VISIBLE,
   INDEX `idx_status` (`StatusID` ASC) VISIBLE,
   CONSTRAINT `fk_instance_book`
     FOREIGN KEY (`BookID`)
