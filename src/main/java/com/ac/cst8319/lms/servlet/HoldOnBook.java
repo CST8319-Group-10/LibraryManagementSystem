@@ -1,4 +1,4 @@
-package com.lms.web.servlet;
+package com.ac.cst8319.lms.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -7,9 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import com.lms.web.model.BookCopy;
-import com.lms.web.model.BookStatus;
-import com.lms.web.service.HoldBookService;
+import com.ac.cst8319.lms.model.BookCopy;
+import com.ac.cst8319.lms.model.BookStatus;
+import com.ac.cst8319.lms.service.HoldBookService;
 
 /**
  * Servlet implementation class HoldOnBook

@@ -1,4 +1,4 @@
-package com.lms.web.dao;
+package com.ac.cst8319.lms.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,17 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.lms.web.model.Author;
-import com.lms.web.model.Book;
-import com.lms.web.model.BookCopy;
-import com.lms.web.model.BookStatus;
+import com.ac.cst8319.lms.model.Author;
+import com.ac.cst8319.lms.model.Book;
+import com.ac.cst8319.lms.model.BookCopy;
+import com.ac.cst8319.lms.model.BookStatus;
+import com.ac.cst8319.lms.util.DatabaseConnection;
 
 public class FindBookDao {
 	
 	public Map<Book, Author> searchByAuthor(String authorFirstName, String authorLastName) {
 			
 		try {
-			Connection connection = DBConnection.createConnection();
+			Connection connection = DatabaseConnection.getConnection();
 		
 			String sql = "SELECT * FROM book INNER JOIN author ON book.AuthorID = author.AuthorID WHERE FirstName = ? AND LastName = ?";
 			
@@ -45,13 +46,13 @@ public class FindBookDao {
 				book.setDescription(rs.getString("Description"));
 				
 				Author author = new Author();
-				author.setAuthorID(rs.getLong("AuthorID"));
+				author.setAuthorId(rs.getLong("AuthorID"));
 				author.setFirstName(rs.getString("FirstName"));
 				author.setLastName(rs.getString("LastName"));
 			
 				books.put(book, author);
 			}
-			DBConnection.closeConnection(connection);
+			DatabaseConnection.closeConnection(connection);
 			return books;
 			
 		}
@@ -65,7 +66,7 @@ public class FindBookDao {
 	public Map<Book, Author> searchByTitle(String bookTitle) {
 		
 		try {
-			Connection connection = DBConnection.createConnection();
+			Connection connection = DatabaseConnection.getConnection();
 			
 			String sql = "SELECT * FROM book INNER JOIN author ON book.AuthorID = author.AuthorID WHERE Title = ?";
 			
@@ -88,13 +89,13 @@ public class FindBookDao {
 				book.setDescription(rs.getString("Description"));
 				
 				Author author = new Author();
-				author.setAuthorID(rs.getLong("AuthorID"));
+				author.setAuthorId(rs.getLong("AuthorID"));
 				author.setFirstName(rs.getString("FirstName"));
 				author.setLastName(rs.getString("LastName"));
 			
 				books.put(book, author);
 			}
-			DBConnection.closeConnection(connection);
+			DatabaseConnection.closeConnection(connection);
 			return books;
 			
 		}
@@ -108,7 +109,7 @@ public class FindBookDao {
 	public Map<Book, Author> browseByGenre(String genre){
 		
 		try {
-			Connection connection = DBConnection.createConnection();
+			Connection connection = DatabaseConnection.getConnection();
 			
 			String sql = "SELECT * FROM book INNER JOIN genre ON book.GenreID = genre.GenreID INNER JOIN author ON book.AuthorID = author.AuthorID WHERE Name = ?";
 			
@@ -131,13 +132,13 @@ public class FindBookDao {
 				book.setDescription(rs.getString("Description"));
 				
 				Author author = new Author();
-				author.setAuthorID(rs.getLong("AuthorID"));
+				author.setAuthorId(rs.getLong("AuthorID"));
 				author.setFirstName(rs.getString("FirstName"));
 				author.setLastName(rs.getString("LastName"));
 			
 				books.put(book, author);
 			}
-			DBConnection.closeConnection(connection);
+			DatabaseConnection.closeConnection(connection);
 			return books;
 			
 		}
@@ -151,7 +152,7 @@ public class FindBookDao {
 	public Map<BookCopy, BookStatus> checkBookAvailability(String bookTitle) {
 		
 		try {
-			Connection connection = DBConnection.createConnection();
+			Connection connection = DatabaseConnection.getConnection();
 			
 			String sql = "SELECT * FROM book INNER JOIN bookcopy ON book.BookID = bookcopy.BookID INNER JOIN bookstatus ON bookcopy.StatusID = bookstatus.BookStatusID WHERE Title = ?";
 			
@@ -176,7 +177,7 @@ public class FindBookDao {
 				
 				bookCopies.put(bookCopy, bookStatus);
 			}
-			DBConnection.closeConnection(connection);
+			DatabaseConnection.closeConnection(connection);
 			return bookCopies;
 			
 		}

@@ -1,8 +1,8 @@
-package com.lms.web.service;
+package com.ac.cst8319.lms.service;
 
-import com.lms.web.dao.HoldBookDao;
-import com.lms.web.model.BookCopy;
-import com.lms.web.model.BookStatus;
+import com.ac.cst8319.lms.dao.HoldBookDao;
+import com.ac.cst8319.lms.model.BookCopy;
+import com.ac.cst8319.lms.model.BookStatus;
 
 public class HoldBookService {
 

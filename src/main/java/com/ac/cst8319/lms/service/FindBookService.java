@@ -1,14 +1,14 @@
-package com.lms.web.service;
+package com.ac.cst8319.lms.service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.lms.web.dao.FindBookDao;
-import com.lms.web.model.Author;
-import com.lms.web.model.Book;
-import com.lms.web.model.BookCopy;
-import com.lms.web.model.BookStatus;
-import com.lms.web.model.Genre;
+import com.ac.cst8319.lms.dao.FindBookDao;
+import com.ac.cst8319.lms.model.Author;
+import com.ac.cst8319.lms.model.Book;
+import com.ac.cst8319.lms.model.BookCopy;
+import com.ac.cst8319.lms.model.BookStatus;
+import com.ac.cst8319.lms.model.Genre;
 
 public class FindBookService {
 

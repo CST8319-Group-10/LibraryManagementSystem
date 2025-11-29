@@ -1,4 +1,4 @@
-package com.lms.web.servlet;
+package com.ac.cst8319.lms.servlet;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.lms.web.model.Book;
-import com.lms.web.model.BookCopy;
-import com.lms.web.model.BookStatus;
-import com.lms.web.service.FindBookService;
+import com.ac.cst8319.lms.model.Book;
+import com.ac.cst8319.lms.model.BookCopy;
+import com.ac.cst8319.lms.model.BookStatus;
+import com.ac.cst8319.lms.service.FindBookService;
 
 /**
  * Servlet implementation class CheckBookAvailability
