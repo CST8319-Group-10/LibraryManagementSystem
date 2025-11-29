@@ -18,4 +18,10 @@ public class Author {
     private String biography;
     private Instant createdAt;
     private Instant updatedAt;
+
+	public void setFullName(String fullName) {
+		String[] names = fullName.split(" ");
+		this.firstName = names[0];
+		this.lastName = names[1];
+	}
 }
