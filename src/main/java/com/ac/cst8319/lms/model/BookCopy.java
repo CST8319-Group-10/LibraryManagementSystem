@@ -16,7 +16,7 @@ public class BookCopy {
     private long bookId;
     private int statusId;
     private String location;
-    private LocalDate aquisitionDate;
+    private LocalDate acquisitionDate;
 
     /* TODO: Add the JOINed members as needed by services
     */
