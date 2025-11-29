@@ -1,15 +1,53 @@
 package com.ac.cst8319.lms.model;
 
-import lombok.*;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+@Entity
+@Table(name = "account_standing")
 public class AccountStanding {
-    private int standingId;
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = "name", unique = true, nullable = false, length = 50)
     private String name;
+    
+    @Column(name = "description", length = 255)
     private String description;
+    
+    @OneToMany(mappedBy = "accountStanding", fetch = FetchType.LAZY)
+    private List<UserAccount> users = new ArrayList<>();
+    
+    // Constructors
+    public AccountStanding() {}
+    
+    public AccountStanding(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+    
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
+    public List<UserAccount> getUsers() { return users; }
+    public void setUsers(List<UserAccount> users) { this.users = users; }
+    
+    @Override
+    public String toString() {
+        return "AccountStanding{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

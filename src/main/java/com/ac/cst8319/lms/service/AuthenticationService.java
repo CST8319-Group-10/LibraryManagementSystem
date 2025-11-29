@@ -1,181 +1,346 @@
 package com.ac.cst8319.lms.service;
 
-import com.ac.cst8319.lms.dao.UserAccountDAO;
-import com.ac.cst8319.lms.dao.impl.UserAccountDAOImpl;
+import com.ac.cst8319.lms.model.AccountStanding;
+import com.ac.cst8319.lms.model.Role;
 import com.ac.cst8319.lms.model.UserAccount;
-import com.ac.cst8319.lms.util.AuditLogger;
-import com.ac.cst8319.lms.util.PasswordUtil;
-import com.ac.cst8319.lms.util.RoleUtil;
-import com.ac.cst8319.lms.util.ValidationUtil;
+import com.ac.cst8319.lms.repository.AccountStandingRepository;
+import com.ac.cst8319.lms.repository.RoleRepository;
+import com.ac.cst8319.lms.repository.UserAccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
- * Service for user authentication operations.
+ * Service class for authentication and authorization operations
+ * Handles user registration, login, password management and account status
  */
+@Service
+@Transactional
 public class AuthenticationService {
-
-    private final UserAccountDAO userDAO;
-
-    public AuthenticationService() {
-        this.userDAO = new UserAccountDAOImpl();
-    }
-
+    
+    @Autowired
+    private UserAccountRepository userRepository;
+    
+    @Autowired
+    private RoleRepository roleRepository;
+    
+    @Autowired
+    private AccountStandingRepository accountStandingRepository;
+    
+    @Autowired
+    private PasswordUtil passwordUtil;
+    
     /**
-     * Authenticate a user with email and password.
-     * @param email user's email
-     * @param password plain text password
-     * @param ipAddress IP address of the request
-     * @return Optional containing the authenticated user if successful, empty otherwise
+     * Authenticate user login - returns UserAccount object
+     * @param username the username
+     * @param password the password
+     * @return authentication result with UserAccount
      */
-    public Optional<UserAccount> login(String email, String password, String ipAddress) {
-        // Validate input
-        if (!ValidationUtil.isValidEmail(email) || ValidationUtil.isEmpty(password)) {
-            AuditLogger.logLoginFailed(email, ipAddress);
-            return Optional.empty();
-        }
-
-        // Find user by email
-        Optional<UserAccount> userOpt = userDAO.findByEmail(email);
-        if (userOpt.isEmpty()) {
-            AuditLogger.logLoginFailed(email, ipAddress);
-            return Optional.empty();
-        }
-
-        UserAccount user = userOpt.get();
-
-        // Verify password
-        if (!PasswordUtil.verifyPassword(password, user.getPasswordHash())) {
-            AuditLogger.logLoginFailed(email, ipAddress);
-            return Optional.empty();
-        }
-
-        // Check if account is banned
-        if (user.getAccountStanding() == 3) { // Banned
-            AuditLogger.logLoginFailed(email + " (account banned)", ipAddress);
-            return Optional.empty();
-        }
-
-        // Update last login timestamp
-        userDAO.updateLastLogin(user.getUserId());
-
-        // Log successful login
-        AuditLogger.logUserLogin(user.getUserId(), ipAddress);
-
-        return Optional.of(user);
+   public AuthenticationResult authenticate(String username, String password) {
+    System.out.println("AuthenticationService: Authenticating user - " + username);
+    
+    Optional<UserAccount> userOpt = userRepository.findByUsername(username);
+    
+    if (userOpt.isEmpty()) {
+        System.out.println("AuthenticationService: User not found - " + username);
+        return new AuthenticationResult(false, "Invalid username or password", null);
     }
-
+    
+    UserAccount user = userOpt.get();
+    System.out.println("AuthenticationService: User found - " + user.getUsername());
+    System.out.println("AuthenticationService: User role - " + (user.getRole() != null ? user.getRole().getName() : "NULL"));
+    System.out.println("AuthenticationService: Account standing - " + (user.getAccountStanding() != null ? user.getAccountStanding().getName() : "NULL"));
+    
+    // Check if account is locked due to failed login attempts
+    if (Boolean.TRUE.equals(user.getAccountLocked())) {
+        return new AuthenticationResult(false, "Account is locked due to too many failed login attempts. Please contact administrator.", null);
+    }
+    
+    // Check account standing
+    AccountStanding standing = user.getAccountStanding();
+    if (standing != null) {
+        switch (standing.getName()) {
+            case "SUSPENDED":
+                return new AuthenticationResult(false, "Account is suspended. Please contact library staff.", null);
+            case "DISABLED":
+                return new AuthenticationResult(false, "Account is disabled. Please contact administrator.", null);
+            case "PENDING_VERIFICATION":
+                return new AuthenticationResult(false, "Account pending email verification. Please check your email.", null);
+            case "ACTIVE":
+                // Continue with login
+                break;
+            default:
+                return new AuthenticationResult(false, "Account status is invalid. Please contact administrator.", null);
+        }
+    }
+    
+    // DEBUG: Add password verification details
+    System.out.println("=== PASSWORD VERIFICATION DEBUG ===");
+    System.out.println("AuthenticationService: Input password - '" + password + "'");
+    System.out.println("AuthenticationService: Stored hash - " + user.getPassword());
+    System.out.println("AuthenticationService: Hash length - " + (user.getPassword() != null ? user.getPassword().length() : "NULL"));
+    
+    // Verify password
+    boolean passwordMatch = passwordUtil.verifyPassword(password, user.getPassword());
+    System.out.println("AuthenticationService: Password match result - " + passwordMatch);
+    System.out.println("=== END DEBUG ===");
+    
+    if (!passwordMatch) {
+        // Increment failed login attempts - handle null values
+        Integer currentAttempts = user.getFailedLoginAttempts();
+        if (currentAttempts == null) {
+            currentAttempts = 0;
+        }
+        user.setFailedLoginAttempts(currentAttempts + 1);
+        
+        // Lock account after 5 failed attempts
+        if (user.getFailedLoginAttempts() >= 5) {
+            user.setAccountLocked(true);
+            userRepository.save(user);
+            return new AuthenticationResult(false, "Account locked due to too many failed login attempts. Please contact administrator.", null);
+        }
+        
+        userRepository.save(user);
+        int attemptsLeft = 5 - user.getFailedLoginAttempts();
+        return new AuthenticationResult(false, 
+            String.format("Invalid username or password. %d attempts remaining.", attemptsLeft), null);
+    }
+    
+    // Successful login - reset failed attempts and update last login
+    user.setFailedLoginAttempts(0);
+    user.setLastLogin(LocalDateTime.now());
+    userRepository.save(user);
+    
+    System.out.println("AuthenticationService: Login successful for user - " + username);
+    return new AuthenticationResult(true, "Login successful", user);
+}
+    
     /**
-     * Register a new user.
-     * @param user user account with details (password should be plain text)
-     * @param plainPassword plain text password
-     * @param ipAddress IP address of the request
-     * @return the created user account
-     * @throws IllegalArgumentException if validation fails
+     * Maintain original login method for compatibility, but mark as deprecated
+     * @deprecated Use {@link #authenticate(String, String)} instead
      */
-    public UserAccount register(UserAccount user, String plainPassword, String ipAddress) {
-        // Validate input
-        validateUserRegistration(user, plainPassword);
-
+    @Deprecated
+    public AuthenticationResult login(String username, String password) {
+        return authenticate(username, password);
+    }
+    
+    /**
+     * Register new user account
+     * @param user the user account to register
+     * @param plainPassword the plain text password
+     * @param roleName the role name
+     * @return registration result
+     */
+    public RegistrationResult register(UserAccount user, String plainPassword, String roleName) {
+        System.out.println("AuthenticationService: Registering new user - " + user.getUsername());
+        
+        // Check if username already exists
+        if (userRepository.existsByUsername(user.getUsername())) {
+            return new RegistrationResult(false, "Username already exists");
+        }
+        
         // Check if email already exists
-        if (userDAO.findByEmail(user.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already registered");
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return new RegistrationResult(false, "Email already exists");
         }
-
-        // Hash password
-        String passwordHash = PasswordUtil.hashPassword(plainPassword);
-        user.setPasswordHash(passwordHash);
-
-        // Set default values
-        user.setRoleId(RoleUtil.ROLE_REGISTERED_USER); // Default role
-        user.setAccountStanding(1); // Good Standing
-
-        // Insert user
-        long userId = userDAO.insert(user);
-        user.setUserId(userId);
-
-        // Log registration
-        AuditLogger.logUserRegistration(userId, ipAddress);
-
-        return user;
+        
+        // Check password strength
+        PasswordUtil.PasswordStrength strength = passwordUtil.checkPasswordStrength(plainPassword);
+        if (strength == PasswordUtil.PasswordStrength.WEAK) {
+            return new RegistrationResult(false, "Password is too weak. Please use a stronger password with at least 8 characters including uppercase, lowercase, numbers, and special characters.");
+        }
+        
+        // Get role from database
+        Optional<Role> roleOpt = roleRepository.findByName(roleName.toUpperCase());
+        if (roleOpt.isEmpty()) {
+            return new RegistrationResult(false, "Invalid role specified: " + roleName);
+        }
+        
+        // Get default account standing (ACTIVE for now)
+        Optional<AccountStanding> standingOpt = accountStandingRepository.findActiveStanding();
+        if (standingOpt.isEmpty()) {
+            return new RegistrationResult(false, "System error: Active account standing not found");
+        }
+        
+        // Hash password and set role/standing
+        user.setPassword(passwordUtil.hashPassword(plainPassword));
+        user.setRole(roleOpt.get());
+        user.setAccountStanding(standingOpt.get());
+        
+        try {
+            userRepository.save(user);
+            System.out.println("AuthenticationService: User registered successfully - " + user.getUsername());
+            return new RegistrationResult(true, roleName + " account created successfully");
+        } catch (Exception e) {
+            System.out.println("AuthenticationService: Registration failed - " + e.getMessage());
+            return new RegistrationResult(false, "Registration failed: " + e.getMessage());
+        }
     }
-
+    
     /**
-     * Log out a user.
-     * @param userId user ID
-     * @param ipAddress IP address
+     * Change user password
+     * @param username the username
+     * @param currentPassword the current password
+     * @param newPassword the new password
+     * @return true if password changed successfully, false otherwise
      */
-    public void logout(long userId, String ipAddress) {
-        AuditLogger.logUserLogout(userId, ipAddress);
-    }
-
-    /**
-     * Change user's password.
-     * @param userId user ID
-     * @param oldPassword current password
-     * @param newPassword new password
-     * @param ipAddress IP address
-     * @return true if password was changed successfully, false otherwise
-     */
-    public boolean changePassword(long userId, String oldPassword, String newPassword, String ipAddress) {
-        // Get user
-        Optional<UserAccount> userOpt = userDAO.findById(userId);
+    public boolean changePassword(String username, String currentPassword, String newPassword) {
+        System.out.println("AuthenticationService: Changing password for user - " + username);
+        
+        Optional<UserAccount> userOpt = userRepository.findByUsername(username);
+        
         if (userOpt.isEmpty()) {
             return false;
         }
-
+        
         UserAccount user = userOpt.get();
-
-        // Verify old password
-        if (!PasswordUtil.verifyPassword(oldPassword, user.getPasswordHash())) {
+        
+        // Verify current password
+        if (!passwordUtil.verifyPassword(currentPassword, user.getPassword())) {
             return false;
         }
-
-        // Validate new password
-        if (!ValidationUtil.isValidPassword(newPassword)) {
-            throw new IllegalArgumentException(ValidationUtil.getPasswordRequirements());
+        
+        // Check new password strength
+        PasswordUtil.PasswordStrength strength = passwordUtil.checkPasswordStrength(newPassword);
+        if (strength == PasswordUtil.PasswordStrength.WEAK) {
+            return false;
         }
-
-        // Hash new password
-        String newPasswordHash = PasswordUtil.hashPassword(newPassword);
-
+        
         // Update password
-        boolean updated = userDAO.updatePassword(userId, newPasswordHash);
-
-        if (updated) {
-            AuditLogger.logPasswordChange(userId, ipAddress);
-        }
-
-        return updated;
+        user.setPassword(passwordUtil.hashPassword(newPassword));
+        userRepository.save(user);
+        
+        System.out.println("AuthenticationService: Password changed successfully for user - " + username);
+        return true;
     }
-
+    
     /**
-     * Validate user registration data.
-     * @param user user account
-     * @param password plain text password
-     * @throws IllegalArgumentException if validation fails
+     * Check if user has specific role
+     * @param username the username
+     * @param roleName the role name to check
+     * @return true if user has the role, false otherwise
      */
-    private void validateUserRegistration(UserAccount user, String password) {
-        if (!ValidationUtil.isValidEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Invalid email address");
+    public boolean hasRole(String username, String roleName) {
+        Optional<UserAccount> userOpt = userRepository.findByUsername(username);
+        return userOpt.isPresent() && 
+               userOpt.get().getRole() != null && 
+               roleName.equalsIgnoreCase(userOpt.get().getRole().getName());
+    }
+    
+    /**
+     * Get default role (for Member registration)
+     * @return the default MEMBER role
+     */
+    public Role getDefaultRole() {
+        return roleRepository.findByName("MEMBER")
+                .orElseThrow(() -> new RuntimeException("Default MEMBER role not found in database"));
+    }
+    
+    /**
+     * Get account standing for a user
+     * @param username the username
+     * @return the account standing or null if user not found
+     */
+    public AccountStanding getAccountStanding(String username) {
+        Optional<UserAccount> userOpt = userRepository.findByUsername(username);
+        return userOpt.map(UserAccount::getAccountStanding).orElse(null);
+    }
+    
+    /**
+     * Activate user account
+     * @param userId the user ID
+     * @return true if activated successfully, false otherwise
+     */
+    public boolean activateAccount(Long userId) {
+        System.out.println("AuthenticationService: Activating account for user ID - " + userId);
+        
+        Optional<UserAccount> userOpt = userRepository.findById(userId);
+        Optional<AccountStanding> activeOpt = accountStandingRepository.findByName("ACTIVE");
+        
+        if (userOpt.isEmpty() || activeOpt.isEmpty()) {
+            return false;
         }
-
-        if (!ValidationUtil.isValidPassword(password)) {
-            throw new IllegalArgumentException(ValidationUtil.getPasswordRequirements());
+        
+        UserAccount user = userOpt.get();
+        user.setAccountStanding(activeOpt.get());
+        user.setAccountLocked(false);
+        user.setFailedLoginAttempts(0);
+        userRepository.save(user);
+        
+        System.out.println("AuthenticationService: Account activated successfully for user - " + user.getUsername());
+        return true;
+    }
+    
+    /**
+     * Suspend user account
+     * @param userId the user ID
+     * @param reason the reason for suspension
+     * @return true if suspended successfully, false otherwise
+     */
+    public boolean suspendAccount(Long userId, String reason) {
+        System.out.println("AuthenticationService: Suspending account for user ID - " + userId);
+        
+        Optional<UserAccount> userOpt = userRepository.findById(userId);
+        Optional<AccountStanding> suspendedOpt = accountStandingRepository.findByName("SUSPENDED");
+        
+        if (userOpt.isEmpty() || suspendedOpt.isEmpty()) {
+            return false;
         }
-
-        String error = ValidationUtil.validateStringLength(user.getFirstName(), 1, "First name");
-        if (error != null) {
-            throw new IllegalArgumentException(error);
+        
+        UserAccount user = userOpt.get();
+        user.setAccountStanding(suspendedOpt.get());
+        userRepository.save(user);
+        
+        // In a real application, you would log this to an audit log
+        System.out.println("Account suspended: " + user.getUsername() + " - Reason: " + reason);
+        return true;
+    }
+    
+    /**
+     * Authentication result container - modified to include UserAccount
+     */
+    public static class AuthenticationResult {
+        private final boolean success;
+        private final String message;
+        private final UserAccount userAccount;
+        
+        public AuthenticationResult(boolean success, String message, UserAccount userAccount) {
+            this.success = success;
+            this.message = message;
+            this.userAccount = userAccount;
         }
-
-        error = ValidationUtil.validateStringLength(user.getLastName(), 1, "Last name");
-        if (error != null) {
-            throw new IllegalArgumentException(error);
+        
+        public boolean isSuccess() { return success; }
+        public String getMessage() { return message; }
+        public UserAccount getUserAccount() { return userAccount; }
+        
+        // For backward compatibility, keep these methods but mark as deprecated
+        @Deprecated
+        public String getToken() { return null; }
+        
+        @Deprecated
+        public String getRole() { 
+            return userAccount != null && userAccount.getRole() != null ? 
+                   userAccount.getRole().getName() : null; 
         }
-
-        if (user.getPhone() != null && !ValidationUtil.isValidPhoneNumber(user.getPhone())) {
-            throw new IllegalArgumentException("Invalid phone number");
+    }
+    
+    /**
+     * Registration result container - unchanged
+     */
+    public static class RegistrationResult {
+        private final boolean success;
+        private final String message;
+        
+        public RegistrationResult(boolean success, String message) {
+            this.success = success;
+            this.message = message;
         }
+        
+        public boolean isSuccess() { return success; }
+        public String getMessage() { return message; }
     }
 }

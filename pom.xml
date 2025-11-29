@@ -1,134 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.cst8319</groupId>
-	<artifactId>lms</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>lms</name>
-	<description>Library Management System using Java Servlets and JSP</description>
-
-	<properties>
-		<java.version>17</java.version>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<dependencies>
-		<!-- Servlet API -->
-		<dependency>
-			<groupId>jakarta.servlet</groupId>
-			<artifactId>jakarta.servlet-api</artifactId>
-			<version>6.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- JSP API -->
-		<dependency>
-			<groupId>jakarta.servlet.jsp</groupId>
-			<artifactId>jakarta.servlet.jsp-api</artifactId>
-			<version>3.1.1</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- JSTL -->
-		<dependency>
-			<groupId>jakarta.servlet.jsp.jstl</groupId>
-			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-			<version>3.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.web</groupId>
-			<artifactId>jakarta.servlet.jsp.jstl</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-
-		<!-- MySQL Connector -->
-		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<version>8.3.0</version>
-		</dependency>
-
-		<!-- Lombok (optional, for reducing boilerplate) -->
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.30</version>
-			<optional>true</optional>
-		</dependency>
-
-		<!-- Gson for JSON handling -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
-		</dependency>
-
-		<!-- BCrypt for password hashing -->
-		<dependency>
-			<groupId>at.favre.lib</groupId>
-			<artifactId>bcrypt</artifactId>
-			<version>0.10.2</version>
-		</dependency>
-
-		<!-- JUnit for testing -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<finalName>lms</finalName>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
-				<configuration>
-					<source>17</source>
-					<target>17</target>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>1.18.30</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>3.4.0</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			<!-- Cargo plugin for running with Tomcat 10 -->
-			<plugin>
-				<groupId>org.codehaus.cargo</groupId>
-				<artifactId>cargo-maven3-plugin</artifactId>
-				<version>1.10.10</version>
-				<configuration>
-					<container>
-						<containerId>tomcat10x</containerId>
-						<type>embedded</type>
-					</container>
-					<configuration>
-						<properties>
-							<cargo.servlet.port>8080</cargo.servlet.port>
-						</properties>
-					</configuration>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.0</version>
+        <relativePath/>
+    </parent>
+    
+    <groupId>com.ac</groupId>
+    <artifactId>cst8319-lms</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+    
+    <dependencies>
+        <!-- Spring Boot Starters -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        
+        <!-- JSP Support -->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+        </dependency>
+        
+        <!-- MySQL Driver -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Password Hashing -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+        
+        <!-- JWT for Authentication -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 </project>
