@@ -1,0 +1,45 @@
+package com.library.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BookCatalogue {
+    // Association (One-to-Many): Manages a list of Book objects
+    private List<Book> books;
+
+    public BookCatalogue() {
+        this.books = new ArrayList<>();
+        // Seed some initial data for demonstration purposes
+        this.books.add(new Book(101, "The Hitchhiker's Guide", "Douglas Adams", true));
+        this.books.add(new Book(102, "1984", "George Orwell", false));
+    }
+
+    // Methods for inventory management
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void addBook(Book book) {
+        this.books.add(book);
+    }
+
+    public void deleteBook(int bookId) {
+        this.books.removeIf(book -> book.getID() == bookId);
+    }
+    
+    public Book findBookById(int bookId) {
+        return this.books.stream()
+            .filter(book -> book.getID() == bookId)
+            .findFirst()
+            .orElse(null);
+    }
+
+    public void updateBook(Book updatedBook) {
+        Book existingBook = findBookById(updatedBook.getID());
+        if (existingBook != null) {
+            existingBook.setTitle(updatedBook.getTitle());
+            existingBook.setAuthor(updatedBook.getAuthor());
+            existingBook.setAvailable(updatedBook.isAvailable());
+        }
+    }
+}
