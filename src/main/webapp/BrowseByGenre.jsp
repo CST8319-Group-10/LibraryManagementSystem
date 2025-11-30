@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="com.lms.web.model.Author" %>
-<%@ page import="com.lms.web.model.Book" %>
+<%@ page import="com.ac.cst8319.lms.model.Author" %>
+<%@ page import="com.ac.cst8319.lms.model.Book" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,6 +13,7 @@
 <body>
 	<%
 		Map<Book, Author> books = (Map<Book, Author>)request.getAttribute("books");
+		String message = (String)request.getAttribute("message");
 	%>
 	<nav>
 		<a href="BrowseByGenre.jsp">Browse</a> 
@@ -31,31 +32,34 @@
 	
 	<!--Controls whether books were found from browsing through a genre-->	
 		<% 
-			if(books == null) {		
+			if(message == null) {		
 		%>	
 				<p>Specify a genre to browse for books.</p>
 		<%
 			}
 			else {
-					for (Map.Entry<Book, Author> book : books.entrySet()) {	
-		%>
-						<form action="checkBookAvailability" method="get">	
-							<label for="title>">Title</label> 
-							<input type="text" id="title" name="bookTitle" value="<%=book.getKey().getTitle()%>">
-							<label for="firstName">Author's First Name</label> 
-							<input type="text" id="firstName" name="authorFirstName" value="<%=book.getValue().getFirstName()%>">
-							<label for="lastName">Author's Last Name</label> 
-							<input type="text" id="lastName" name="authorLastName" value="<%=book.getValue().getLastName()%>">
-							<label for="publisher">Publisher</label> 
-							<input type="text" id="publisher" name="bookPublisher" value="<%=book.getKey().getPublisher()%>">
-							<label for="publicationYear">Publication Year</label> 
-							<input type="text" id="publicationYear" name="bookPublicationYear" value="<%=book.getKey().getPublicationYear()%>">
-							<label for="description">Description</label> 
-							<input type="text" id="description" name="bookDescription" value="<%=book.getKey().getDescription()%>">
-							<input type="submit" value="Check Availability">
-						</form><br>
+				for (Map.Entry<Book, Author> book : books.entrySet()) {	
+	%>
+					<form action="checkBookAvailability" method="GET">	
+						<label for="title>">Title</label> 
+						<input type="text" id="title" name="bookTitle" value="<%=book.getKey().getTitle()%>">
+						<label for="firstName">Author's First Name</label> 
+						<input type="text" id="firstName" name="authorFirstName" value="<%=book.getValue().getFirstName()%>">
+						<label for="lastName">Author's Last Name</label> 
+						<input type="text" id="lastName" name="authorLastName" value="<%=book.getValue().getLastName()%>">
+						<label for="publisher">Publisher</label> 
+						<input type="text" id="publisher" name="bookPublisher" value="<%=book.getKey().getPublisher()%>">
+						<label for="publicationYear">Publication Year</label> 
+						<input type="text" id="publicationYear" name="bookPublicationYear" value="<%=book.getKey().getPublicationYear()%>">
+						<label for="description">Description</label> 
+						<input type="text" id="description" name="bookDescription" value="<%=book.getKey().getDescription()%>">
+						<input type="submit" value="Check Availability">
+					</form><br>
 		<%
 					}
+		%>
+				<p><%=message%></p>
+		<%
 			}
 		%>
 </body>

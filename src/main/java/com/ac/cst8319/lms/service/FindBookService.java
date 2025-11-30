@@ -1,14 +1,14 @@
-package com.lms.web.service;
+package com.ac.cst8319.lms.service;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.lms.web.dao.FindBookDao;
-import com.lms.web.model.Author;
-import com.lms.web.model.Book;
-import com.lms.web.model.BookCopy;
-import com.lms.web.model.BookStatus;
-import com.lms.web.model.Genre;
+import com.ac.cst8319.lms.dao.FindBookDao;
+import com.ac.cst8319.lms.model.Author;
+import com.ac.cst8319.lms.model.Book;
+import com.ac.cst8319.lms.model.BookCopy;
+import com.ac.cst8319.lms.model.BookStatus;
+import com.ac.cst8319.lms.model.Genre;
 
 public class FindBookService {
 
@@ -25,11 +25,21 @@ public class FindBookService {
 		else if(author.getFirstName() != null && author.getLastName() != null){
 			books = findBookDao.searchByAuthor(author.getFirstName(), author.getLastName());
 		}
+		
+		if(books.size() == 0) {
+			throw new IllegalArgumentException("The title or author couldn't be found.");
+		}
 		return books;
 	}
 	
 	public Map<Book, Author> browseByGenre(Genre genre) {
-		return findBookDao.browseByGenre(genre.getName());
+		
+		Map<Book, Author> books = findBookDao.browseByGenre(genre.getName());
+		
+		if(books.size() == 0) {
+			throw new IllegalArgumentException("The genre is invalid.");
+		}
+		return books;
 	}
 	
 	public Map<BookCopy, BookStatus> checkBookAvailability(Book book) {
