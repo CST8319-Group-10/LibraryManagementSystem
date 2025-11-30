@@ -26,22 +26,35 @@ public class SearchForBook extends HttpServlet {
 		
 		Book book = new Book();
 		Author author = new Author();
+		String searchValue = "";
 		
 		//Determine if searching by title or author to set an instance variable
 		if(bookTitle != null) {
 			book.setTitle(bookTitle);
+			searchValue = book.getTitle();
 		}
 		else if (bookAuthor != null) {
 			author.setFullName(bookAuthor);
+			searchValue = author.getFirstName() + " " + author.getLastName();
 		}
 		
-		//Search for book by title or author, as determined above
 		Map<Book, Author> books = new HashMap();
-		FindBookService findBookService = new FindBookService();
-		books = findBookService.searchForBook(book, author);
+		String message = "";
+		
+		try {
+			//Search for book by title or author, as determined above
+			FindBookService findBookService = new FindBookService();
+			books = findBookService.searchForBook(book, author);
+			message = "The search for " + searchValue.toLowerCase() + " was successful and a book was found.";
+		}
+		catch(IllegalArgumentException e) {
+			e.printStackTrace();
+			message = "No books could be found from the search of " + searchValue.toLowerCase() + ".";
+		}
 		
 		//All books found from search
 		request.setAttribute("books", books);
+		request.setAttribute("message", message);
 		request.getRequestDispatcher("SearchForBook.jsp").forward(request, response);	
 	}
 }

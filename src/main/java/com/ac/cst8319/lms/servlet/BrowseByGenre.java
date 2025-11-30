@@ -26,11 +26,21 @@ public class BrowseByGenre extends HttpServlet {
 		Genre genre = new Genre();
 		genre.setName(genreName);
 		
-		//Browse for books by genre
-		FindBookService findBookService = new FindBookService();
 		Map<Book, Author> books = new HashMap();
-		books = findBookService.browseByGenre(genre);
+		String message = "";
 		
+		try {
+			//Browse for books in a genre
+			FindBookService findBookService = new FindBookService();
+			books = findBookService.browseByGenre(genre);
+			message = "Browsing for books under the genre of " + genreName.toLowerCase() + " was successful.";
+		}
+		catch(IllegalArgumentException e) {
+			e.printStackTrace();
+			message = "The genre of " + genreName.toLowerCase() + " couldn't be found and no books can be browsed.";
+		}
+		
+		request.setAttribute("message", message);
 		request.setAttribute("books", books);
 		request.getRequestDispatcher("BrowseByGenre.jsp").forward(request, response);
 	}

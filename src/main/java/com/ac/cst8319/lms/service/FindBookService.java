@@ -25,11 +25,21 @@ public class FindBookService {
 		else if(author.getFirstName() != null && author.getLastName() != null){
 			books = findBookDao.searchByAuthor(author.getFirstName(), author.getLastName());
 		}
+		
+		if(books.size() == 0) {
+			throw new IllegalArgumentException("The title or author couldn't be found.");
+		}
 		return books;
 	}
 	
 	public Map<Book, Author> browseByGenre(Genre genre) {
-		return findBookDao.browseByGenre(genre.getName());
+		
+		Map<Book, Author> books = findBookDao.browseByGenre(genre.getName());
+		
+		if(books.size() == 0) {
+			throw new IllegalArgumentException("The genre is invalid.");
+		}
+		return books;
 	}
 	
 	public Map<BookCopy, BookStatus> checkBookAvailability(Book book) {

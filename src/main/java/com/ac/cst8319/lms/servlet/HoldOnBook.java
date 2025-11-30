@@ -30,12 +30,21 @@ public class HoldOnBook extends HttpServlet {
 		BookStatus bookStatus = new BookStatus();
 		bookStatus.setName(bookStatusName);
 		
-		//Place hold on book
-		HoldBookService holdBookService = new HoldBookService();
-		bookStatus = holdBookService.placeHoldBook(bookCopy, bookStatus);
+		String message = "";
+		try {
+			//Place hold on book
+			HoldBookService holdBookService = new HoldBookService();
+			bookStatus = holdBookService.placeHoldBook(bookCopy, bookStatus);
+			message = "Placing a hold on the book was successful.";
+		}
+		catch(IllegalArgumentException e) {
+			e.printStackTrace();
+			message = "A hold couldn't be placed on the book.";
+		}
 		
 		request.setAttribute("bookCopy", bookCopy);
 		request.setAttribute("bookStatus", bookStatus);
+		request.setAttribute("message", message);
 		request.getRequestDispatcher("HoldOnBook.jsp").forward(request, response);
 	}
 

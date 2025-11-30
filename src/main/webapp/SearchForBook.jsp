@@ -2,8 +2,8 @@
     pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="com.lms.web.model.Author" %>
-<%@ page import="com.lms.web.model.Book" %>
+<%@ page import="com.ac.cst8319.lms.model.Author" %>
+<%@ page import="com.ac.cst8319.lms.model.Book" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,6 +13,7 @@
 <body>
 	<%
 		Map<Book, Author> books = (Map<Book, Author>)request.getAttribute("books");
+		String message = (String)request.getAttribute("message");
 	%>
 	<nav>
 		<a href="BrowseByGenre.jsp">Browse</a> 
@@ -41,17 +42,15 @@
 	
 	<!--Controls whether book copies were found after searching by title or author-->	
 	<%
-		if (books == null){
+		if (message == null){
 	%>
 			<p>Search by title or author to search for books.</p>
 	<%
 		}
 		else {
-	%>			
-		<% 
 			for (Map.Entry<Book, Author> book : books.entrySet()) {	
-		%>
-				<form action="checkBookAvailability" method="get">			
+	%>
+				<form action="checkBookAvailability" method="GET">			
 					<label for="title">Title</label> 
 					<input type="text" id="title" name="bookTitle" value="<%=book.getKey().getTitle()%>">
 					<label for="firstName">Author's First Name</label> 
@@ -66,9 +65,12 @@
 					<input type="text" id="description" name="bookDescription" value="<%=book.getKey().getDescription()%>">
 					<input type="submit" value="Check Availability">
 				</form><br>
-		<%
+	<%
 			}
+	%>
+			<p><%=message%></p>
+	<%
 		}
-		%>
+	%>
 </body>
 </html>

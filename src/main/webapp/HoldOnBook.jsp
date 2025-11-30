@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="com.lms.web.model.BookStatus" %>
-<%@ page import="com.lms.web.model.BookCopy" %>
+<%@ page import="com.ac.cst8319.lms.model.BookStatus" %>
+<%@ page import="com.ac.cst8319.lms.model.BookCopy" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -12,6 +12,7 @@
 	<%
 		BookStatus bookStatus = (BookStatus)request.getAttribute("bookStatus");
 		BookCopy bookCopy = (BookCopy)request.getAttribute("bookCopy");
+		String message = (String)request.getAttribute("message");
 	%>
 	<nav>
 		<a href="BrowseByGenre.jsp">Browse</a> 
@@ -19,6 +20,8 @@
 	</nav>
 	
 	<h2>Place Hold on Book</h2><br>
+	
+	<p><%=message%></p><br>
 	
 	<table>
 			<tr>
