@@ -1,19 +1,19 @@
-package com.library.controller;
+package com.ac.cst8319.lms.controller;
 
-import com.library.model.Book;
-import com.library.model.BookCatalogue;
+import com.ac.cst8319.lms.model.Book2;
+import com.ac.cst8319.lms.model.BookCatalog;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
 // Maps this servlet to the URL pattern "/BookServlet"
 @WebServlet(name = "BookServlet", value = "/BookServlet")
 public class BookServlet extends HttpServlet {
-    // Use the BookCatalogue as an in-memory "database"
-    private BookCatalogue catalogue = new BookCatalogue();
+    // Use the BookCatalog as an in-memory "database"
+    private BookCatalog catalogue = new BookCatalog();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -48,7 +48,7 @@ public class BookServlet extends HttpServlet {
     }
 
     private void listBooks(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Book> bookList = catalogue.getBooks();
+        List<Book2> bookList = catalogue.getBooks();
         request.setAttribute("bookList", bookList);
         // Forward to the JSP page to display the list
         RequestDispatcher dispatcher = request.getRequestDispatcher("/inventoryList.jsp");
@@ -62,14 +62,14 @@ public class BookServlet extends HttpServlet {
         String author = request.getParameter("author");
         boolean isAvailable = Boolean.parseBoolean(request.getParameter("available"));
 
-        Book newBook = new Book(id, title, author, isAvailable);
+        Book2 newBook = new Book2(id, title, author, isAvailable);
         catalogue.addBook(newBook);
         response.sendRedirect("BookServlet?action=list"); // Redirect back to list view
     }
     
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        Book existingBook = catalogue.findBookById(id);
+        Book2 existingBook = catalogue.findBookById(id);
         request.setAttribute("book", existingBook);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/editBookForm.jsp");
         dispatcher.forward(request, response);
@@ -81,7 +81,7 @@ public class BookServlet extends HttpServlet {
         String author = request.getParameter("author");
         boolean isAvailable = Boolean.parseBoolean(request.getParameter("available"));
         
-        Book updatedBook = new Book(id, title, author, isAvailable);
+        Book2 updatedBook = new Book2(id, title, author, isAvailable);
         catalogue.updateBook(updatedBook);
         response.sendRedirect("BookServlet?action=list");
     }

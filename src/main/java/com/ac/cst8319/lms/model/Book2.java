@@ -1,6 +1,6 @@
-package com.library.model;
+package com.ac.cst8319.lms.model;
 
-public class Book {
+public class Book2 {
     // Attributes
     private String Title;
     private String Author;
@@ -8,14 +8,14 @@ public class Book {
     private boolean isAvailable; // Added an availability status attribute
 
     // Constructor added for easier object creation
-    public Book(int ID, String Title, String Author, boolean isAvailable) {
+    public Book2(int ID, String Title, String Author, boolean isAvailable) {
         this.ID = ID;
         this.Title = Title;
         this.Author = Author;
         this.isAvailable = isAvailable;
     }
     
-    public Book() {
+    public Book2() {
     }
 
     // Methods (Getters and Setters are sufficient for JSP/Servlet interaction)

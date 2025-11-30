@@ -1,16 +1,14 @@
-package com.library.dal;
+package com.ac.cst8319.lms.dao;
 
-import com.library.model.Book;
+import com.ac.cst8319.lms.model.Book2;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ac.cst8319.lms.util.DatabaseConnection;
+
 // This class handles all persistence logic for Book objects in MySQL
-public class BookDAO {
-    // NOTE: Hardcoded connection details are for illustration only.
-    private String jdbcURL = "jdbc:mysql://localhost:3306/library_db?useSSL=false";
-    private String jdbcUsername = "db_user";
-    private String jdbcPassword = "db_password";
+public class BookDAO2 {
 
     private static final String INSERT_BOOKS_SQL = "INSERT INTO books (ID, Title, Author, isAvailable) VALUES (?, ?, ?, ?);";
     private static final String SELECT_BOOK_BY_ID = "SELECT ID, Title, Author, isAvailable FROM books WHERE ID = ?;";
@@ -19,20 +17,12 @@ public class BookDAO {
     private static final String UPDATE_BOOKS_SQL = "UPDATE books SET Title = ?, Author = ?, isAvailable = ? WHERE ID = ?;";
 
     protected Connection getConnection() throws SQLException {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new SQLException("MySQL JDBC Driver not found.");
-        }
-        return connection;
+        return DatabaseConnection.getConnection();
     }
 
     // --- CRUD Operations ---
 
-    public void insertBook(Book book) throws SQLException {
+    public void insertBook(Book2 book) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BOOKS_SQL)) {
             preparedStatement.setInt(1, book.getID());
@@ -45,7 +35,7 @@ public class BookDAO {
         }
     }
 
-    public boolean updateBook(Book book) throws SQLException {
+    public boolean updateBook(Book2 book) throws SQLException {
         boolean rowUpdated;
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_BOOKS_SQL)) {
@@ -69,8 +59,8 @@ public class BookDAO {
         return rowDeleted;
     }
 
-    public Book selectBook(int id) throws SQLException {
-        Book book = null;
+    public Book2 selectBook(int id) throws SQLException {
+        Book2 book = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BOOK_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -80,14 +70,14 @@ public class BookDAO {
                 String title = rs.getString("Title");
                 String author = rs.getString("Author");
                 boolean isAvailable = rs.getBoolean("isAvailable");
-                book = new Book(id, title, author, isAvailable);
+                book = new Book2(id, title, author, isAvailable);
             }
         }
         return book;
     }
 
-    public List<Book> selectAllBooks() throws SQLException {
-        List<Book> books = new ArrayList<>();
+    public List<Book2> selectAllBooks() throws SQLException {
+        List<Book2> books = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_BOOKS)) {
             ResultSet rs = preparedStatement.executeQuery();
@@ -97,7 +87,7 @@ public class BookDAO {
                 String title = rs.getString("Title");
                 String author = rs.getString("Author");
                 boolean isAvailable = rs.getBoolean("isAvailable");
-                books.add(new Book(id, title, author, isAvailable));
+                books.add(new Book2(id, title, author, isAvailable));
             }
         }
         return books;
