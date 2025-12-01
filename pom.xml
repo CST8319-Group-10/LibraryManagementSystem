@@ -82,6 +82,14 @@
 			<version>5.10.1</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- MailerSend for email notifications -->
+		<dependency>
+			<groupId>com.mailersend</groupId>
+			<artifactId>java-sdk</artifactId>
+			<version>1.4.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
