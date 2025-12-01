@@ -232,4 +232,61 @@ public class LibraryOperationsService {
         }
         return allCheckouts.subList(0, limit);
     }
+
+    /**
+     * Get checkouts that have unpaid fees.
+     * @return list of checkouts with unpaid fees.
+     */
+    public List<Checkout> getFeesOwed() {
+        return checkoutDAO.findFeesOwed();
+    }
+
+    /**
+     * Get past checkouts for a member that have unpaid fees.
+     * @param memberId the member's user ID
+     * @return list of checkouts with unpaid fees for the member.
+     */
+    public List<Checkout> getFeesOwedById(long memberId) {
+        return checkoutDAO.findFeesOwedByMember(memberId);
+    }
+
+    /**
+     * Get sum of unpaid fees for member.
+     * @param memberId the member's user ID
+     * @return Sum of member's unpaid fees.
+     */
+    public BigDecimal getTotalFeesOwedByMember(long memberId) {
+        return checkoutDAO.calcTotalFeesOwedByMember(memberId);
+    }
+
+    /**
+     * Process fee payment for an overdue checkout.
+     * @param checkoutId the checkout ID
+     * @param librarianId the librarian processing the return
+     * @return the updated checkout record
+     * @throws IllegalArgumentException if validation fails
+     */
+    public Checkout feesPaid(long checkoutId) {
+        // Get checkout record
+        Optional<Checkout> checkoutOpt = checkoutDAO.findById(checkoutId);
+        if (!checkoutOpt.isPresent()) {
+            throw new IllegalArgumentException("Checkout record not found");
+        }
+
+        Checkout checkout = checkoutOpt.get();
+
+        // Check if fees arleady paid
+        if (checkout.getLateFeeAssessed().equals(BigDecimal.ZERO)
+            || checkout.isLateFeePaid()) {
+            throw new IllegalArgumentException("No fees owing for checkout");
+        }
+
+        // Set fee as paid
+        checkout.setLateFeePaid(true);
+
+        // Update checkout record
+        checkoutDAO.update(checkout);
+
+        return checkout;
+    }
 }

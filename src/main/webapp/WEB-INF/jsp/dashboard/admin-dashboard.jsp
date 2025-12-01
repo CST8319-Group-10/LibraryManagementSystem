@@ -158,7 +158,7 @@
                 <h3>👥 Member Management</h3>
                 <div class="features">
                     <a href="${pageContext.request.contextPath}/librarian/members" class="feature-item">View Member Accounts</a>
-                    <div class="feature-item" onclick="alert('Process Fees feature coming soon')">Process Fees</div>
+                    <a href="${pageContext.request.contextPath}/librarian/fees" class="feature-item">Process Fee Payments</a>
                 </div>
             </div>
 

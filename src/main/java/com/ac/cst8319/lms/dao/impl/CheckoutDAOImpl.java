@@ -4,6 +4,7 @@ import com.ac.cst8319.lms.dao.CheckoutDAO;
 import com.ac.cst8319.lms.model.Checkout;
 import com.ac.cst8319.lms.util.DatabaseConnection;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -341,6 +342,75 @@ public class CheckoutDAOImpl implements CheckoutDAO {
         }
         return 0;
     }
+
+    @Override
+    public List<Checkout> findFeesOwed() {
+        String sql = "SELECT * FROM Checkout "
+                    + " WHERE LateFeeAssessed IS NOT NULL "
+                    + " AND LateFeeAssessed <> 0 AND LateFeePaid <> 1 "
+                    + " ORDER BY DueDate DESC";
+        List<Checkout> checkouts = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    checkouts.add(mapResultSetToCheckout(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding checkouts with fees owed", e);
+        }
+        return checkouts;
+    }
+
+    @Override
+    public List<Checkout> findFeesOwedByMember(long userId) {
+        String sql = "SELECT * FROM Checkout WHERE LoanedTo = ? "
+                    + " AND LateFeeAssessed IS NOT NULL "
+                    + " AND LateFeeAssessed <> 0 AND LateFeePaid <> 1 "
+                    + " ORDER BY DueDate ASC";
+        List<Checkout> checkouts = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    checkouts.add(mapResultSetToCheckout(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding fees owed by member", e);
+        }
+        return checkouts;
+    }
+
+
+    @Override
+    public BigDecimal calcTotalFeesOwedByMember(long userId) {
+        String sql = "SELECT SUM(LateFeeAssessed) FROM Checkout WHERE LoanedTo = ? "
+                    + " AND LateFeeAssessed IS NOT NULL "
+                    + " AND LateFeeAssessed <> 0 AND LateFeePaid <> 1 ";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBigDecimal(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error calculating sum owed by member", e);
+        }
+        return BigDecimal.ZERO;
+    }
+
 
     /**
      * Helper method to map ResultSet to Checkout object.
