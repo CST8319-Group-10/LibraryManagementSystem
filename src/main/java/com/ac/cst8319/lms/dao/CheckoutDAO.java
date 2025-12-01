@@ -1,8 +1,14 @@
 package com.ac.cst8319.lms.dao;
 
-import com.ac.cst8319.lms.model.Checkout;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
+import java.math.BigDecimal;
+
+import lombok.*;
+
+import com.ac.cst8319.lms.model.Book;
+import com.ac.cst8319.lms.model.Checkout;
 
 /**
  * Data Access Object interface for Checkout entity.
@@ -100,4 +106,56 @@ public interface CheckoutDAO {
      * @return overdue checkout count for the member
      */
     long countOverdueByMember(long userId);
+
+    /**
+     * Finds checkouts with unpaid fees.
+     * @return checkouts with unpaid fees
+     */
+    List<Checkout> findFeesOwed();
+
+    /**
+     * Finds checkouts with unpaid fees for a specific member.
+     * @param userId the member's user ID
+     * @return checkouts with unpaid fees for the member
+     */
+    List<Checkout> findFeesOwedByMember(long userId);
+
+
+    /**
+     * Calculates sum of fees owed by a specific member.
+     * @param userId the member's user ID
+     * @return sum of fees owed by the member.
+     */
+    BigDecimal calcTotalFeesOwedByMember(long userId);
+
+    /**
+     * Convience tuple for returning join'ed results.
+     */
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class BorrowedBook {
+        public Book book;
+        public Checkout checkout;
+    }
+
+    /**
+     * Finds currently borrowed books for a user.
+     * @param userId the member's user ID
+     * @return List of checkout/book pairs currently borrowed by the member.
+     */
+    List<BorrowedBook> findBorrowedBooksByMember(long userId);
+
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class BookHistory {
+        public Book book;
+        public LocalDate latestCheckout;
+    }
+    /**
+     * Finds a user's has borrowing history.
+     * @param userId the member's user ID
+     * @return List of books along with latest checkout.
+     */
+    List<BookHistory> findBookHistoryByMember(long userId);
 }

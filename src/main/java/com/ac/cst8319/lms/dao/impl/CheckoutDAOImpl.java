@@ -1,9 +1,11 @@
 package com.ac.cst8319.lms.dao.impl;
 
 import com.ac.cst8319.lms.dao.CheckoutDAO;
+import com.ac.cst8319.lms.model.Book;
 import com.ac.cst8319.lms.model.Checkout;
 import com.ac.cst8319.lms.util.DatabaseConnection;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -342,41 +344,229 @@ public class CheckoutDAOImpl implements CheckoutDAO {
         return 0;
     }
 
+    @Override
+    public List<Checkout> findFeesOwed() {
+        String sql = "SELECT * FROM Checkout "
+                    + " WHERE LateFeeAssessed IS NOT NULL "
+                    + " AND LateFeeAssessed <> 0 AND LateFeePaid <> 1 "
+                    + " ORDER BY DueDate DESC";
+        List<Checkout> checkouts = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    checkouts.add(mapResultSetToCheckout(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding checkouts with fees owed", e);
+        }
+        return checkouts;
+    }
+
+    @Override
+    public List<Checkout> findFeesOwedByMember(long userId) {
+        String sql = "SELECT * FROM Checkout WHERE LoanedTo = ? "
+                    + " AND LateFeeAssessed IS NOT NULL "
+                    + " AND LateFeeAssessed <> 0 AND LateFeePaid <> 1 "
+                    + " ORDER BY DueDate ASC";
+        List<Checkout> checkouts = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    checkouts.add(mapResultSetToCheckout(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding fees owed by member", e);
+        }
+        return checkouts;
+    }
+
+
+    @Override
+    public BigDecimal calcTotalFeesOwedByMember(long userId) {
+        String sql = "SELECT SUM(LateFeeAssessed) FROM Checkout WHERE LoanedTo = ? "
+                    + " AND LateFeeAssessed IS NOT NULL "
+                    + " AND LateFeeAssessed <> 0 AND LateFeePaid <> 1 ";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBigDecimal(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error calculating sum owed by member", e);
+        }
+        return BigDecimal.ZERO;
+    }
+
+    @Override
+    public List<CheckoutDAO.BorrowedBook> findBorrowedBooksByMember(long userId) {
+        String sql = "SELECT B.*, C.* "
+                    + " FROM Checkout C "
+                    + " JOIN BookCopy BC ON BC.BookCopyID = C.BookCopyID "
+                    + " JOIN Book B ON BC.BookID = B.BookID "
+                    + " WHERE C.LoanedTo = ? "
+                    + " ORDER BY C.CheckoutDate DESC ";
+        List<CheckoutDAO.BorrowedBook> borrowedBooks = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    borrowedBooks.add(mapResultSetToBorrowedBook(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error find books borrowed by member", e);
+        }
+
+        return borrowedBooks;
+    }
+
+    @Override
+    public List<CheckoutDAO.BookHistory> findBookHistoryByMember(long userId) {
+        String sql =
+            "SELECT * FROM (" +
+            "  SELECT B.*, C.CheckoutDate, " +
+            "         ROW_NUMBER() OVER (PARTITION BY B.BookID ORDER BY C.CheckoutDate DESC) AS rnk " +
+            "  FROM Checkout C " +
+            "  JOIN BookCopy BC ON BC.BookCopyID = C.BookCopyID " +
+            "  JOIN Book B ON BC.BookID = B.BookID " +
+            "  WHERE C.LoanedTo = ? " +
+            ") Ranked WHERE rnk = 1 ORDER BY CheckoutDate DESC";
+        List<CheckoutDAO.BookHistory> bookHistory = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    bookHistory.add(mapResultSetToBookHistory(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding member book history", e);
+        }
+
+        return bookHistory;
+    }
+
+    /**
+     * Helper method to map ResultSet to BookHistory object.
+     */
+    private CheckoutDAO.BookHistory mapResultSetToBookHistory(ResultSet rs) throws SQLException {
+        Book book = mapResultSetToBook(rs, "B.");
+        LocalDate latestCheckout = rs.getDate("CheckoutDate").toLocalDate();
+
+        return new CheckoutDAO.BookHistory(book, latestCheckout);
+    }
+
+    /**
+     * Helper method to map ResultSet to BorrowedBook object.
+     */
+    private CheckoutDAO.BorrowedBook mapResultSetToBorrowedBook(ResultSet rs) throws SQLException {
+        Book book = mapResultSetToBook(rs, "B.");
+        Checkout checkout = mapResultSetToCheckout(rs, "C.");
+        CheckoutDAO.BorrowedBook borrowedBook = new CheckoutDAO.BorrowedBook(book, checkout);
+
+        return borrowedBook;
+    }
+
+    /**
+     * Helper method to map ResultSet to Book object.
+     */
+    private Book mapResultSetToBook(ResultSet rs, String prefix) throws SQLException {
+        Book book = new Book();
+        book.setBookId(rs.getLong(prefix + "BookID"));
+        book.setIsbn(rs.getString(prefix + "ISBN"));
+        book.setTitle(rs.getString(prefix + "Title"));
+        book.setAuthorId(rs.getLong(prefix + "AuthorID"));
+        book.setGenreId(rs.getInt(prefix + "GenreID"));
+        book.setPublisher(rs.getString(prefix + "Publisher"));
+        book.setPublicationYear(rs.getString(prefix + "PublicationYear"));
+        book.setDescription(rs.getString(prefix + "Description"));
+
+        Timestamp createdAt = rs.getTimestamp(prefix + "CreatedAt");
+        if (createdAt != null) {
+            book.setCreatedAt(createdAt.toInstant());
+        }
+
+        Timestamp updatedAt = rs.getTimestamp(prefix + "UpdatedAt");
+        if (updatedAt != null) {
+            book.setUpdatedAt(updatedAt.toInstant());
+        }
+
+        long createdBy = rs.getLong(prefix + "CreatedBy");
+        if (!rs.wasNull()) {
+            book.setCreatedBy(createdBy);
+        }
+
+        long updatedBy = rs.getLong(prefix + "UpdatedBy");
+        if (!rs.wasNull()) {
+            book.setUpdatedBy(updatedBy);
+        }
+
+        return book;
+    }
+
     /**
      * Helper method to map ResultSet to Checkout object.
      */
     private Checkout mapResultSetToCheckout(ResultSet rs) throws SQLException {
-        Checkout checkout = new Checkout();
-        checkout.setCheckoutId(rs.getLong("CheckoutID"));
-        checkout.setLoanedTo(rs.getLong("LoanedTo"));
-        checkout.setBookCopyId(rs.getLong("BookCopyID"));
+        return mapResultSetToCheckout(rs, "");
+    }
 
-        Date checkoutDate = rs.getDate("CheckoutDate");
+    /**
+     * Helper method to map ResultSet to Checkout object.
+     */
+    private Checkout mapResultSetToCheckout(ResultSet rs, String prefix) throws SQLException {
+        Checkout checkout = new Checkout();
+        checkout.setCheckoutId(rs.getLong(prefix + "CheckoutID"));
+        checkout.setLoanedTo(rs.getLong(prefix + "LoanedTo"));
+        checkout.setBookCopyId(rs.getLong(prefix + "BookCopyID"));
+
+        Date checkoutDate = rs.getDate(prefix + "CheckoutDate");
         if (checkoutDate != null) {
             checkout.setCheckoutDate(checkoutDate.toLocalDate());
         }
 
-        Date dueDate = rs.getDate("DueDate");
+        Date dueDate = rs.getDate(prefix + "DueDate");
         if (dueDate != null) {
             checkout.setDueDate(dueDate.toLocalDate());
         }
 
-        Date returnDate = rs.getDate("ReturnDate");
+        Date returnDate = rs.getDate(prefix + "ReturnDate");
         if (returnDate != null) {
             checkout.setReturnDate(returnDate.toLocalDate());
         }
 
-        checkout.setCheckedOutBy(rs.getLong("CheckedOutBy"));
+        checkout.setCheckedOutBy(rs.getLong(prefix + "CheckedOutBy"));
 
-        long returnedBy = rs.getLong("ReturnedBy");
+        long returnedBy = rs.getLong(prefix + "ReturnedBy");
         if (!rs.wasNull()) {
             checkout.setReturnedBy(returnedBy);
         }
 
-        checkout.setLateFeeAssessed(rs.getBigDecimal("LateFeeAssessed"));
-        checkout.setLateFeePaid(rs.getBoolean("LateFeePaid"));
+        checkout.setLateFeeAssessed(rs.getBigDecimal(prefix + "LateFeeAssessed"));
+        checkout.setLateFeePaid(rs.getBoolean(prefix + "LateFeePaid"));
 
-        Timestamp createdAt = rs.getTimestamp("CreatedAt");
+        Timestamp createdAt = rs.getTimestamp(prefix + "CreatedAt");
         if (createdAt != null) {
             checkout.setCreatedAt(createdAt.toInstant());
         }

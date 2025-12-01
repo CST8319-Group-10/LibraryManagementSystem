@@ -178,8 +178,8 @@
             <div class="card">
                 <h3>📖 My Library</h3>
                 <div class="features">
-                    <div class="feature-item" onclick="alert('Borrowed Books feature coming soon')">Borrowed Books</div>
-                    <div class="feature-item" onclick="alert('Reading History feature coming soon')">Reading History</div>
+                    <a href="${pageContext.request.contextPath}/member/borrowed" class="feature-item">Borrowed Books</a>
+                    <a href="${pageContext.request.contextPath}/member/history" class="feature-item">Reading History</a>
                     <div class="feature-item" onclick="alert('Favorites feature coming soon')">Favorites</div>
                 </div>
             </div>
