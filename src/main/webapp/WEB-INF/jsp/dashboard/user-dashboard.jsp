@@ -1,71 +1,211 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<jsp:include page="../common/header.jsp">
-    <jsp:param name="title" value="Dashboard - Library Management System"/>
-</jsp:include>
-
-<h1>Welcome, <c:out value="${sessionScope.currentUser.firstName}"/>!</h1>
-
-<jsp:include page="../common/messages.jsp"/>
-
-<div class="dashboard-grid">
-    <!-- Account Information -->
-    <div class="account-info">
-        <h2>Your Account</h2>
-        <div class="info-row">
-            <span class="label">Email:</span>
-            <span class="value"><c:out value="${sessionScope.currentUser.email}"/></span>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Member Dashboard - Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: white;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .welcome {
+            font-size: 2em;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .feature-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        .feature-item:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.3);
+        }
+        .user-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.2);
+        }
+        .message.success {
+            background: rgba(76, 175, 80, 0.3);
+            border-left: 4px solid #4CAF50;
+        }
+        .message.error {
+            background: rgba(244, 67, 54, 0.3);
+            border-left: 4px solid #f44336;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .badge-success {
+            background: rgba(76, 175, 80, 0.3);
+            border: 1px solid #4CAF50;
+        }
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.3);
+            border: 1px solid #FFC107;
+        }
+        .badge-danger {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #f44336;
+        }
+        .badge-info {
+            background: rgba(3, 169, 244, 0.3);
+            border: 1px solid #03A9F4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="welcome">👤 Member Dashboard</h1>
+            <div class="nav">
+                <c:if test="${not empty sessionScope.user}">
+                    <span>Welcome, ${sessionScope.user.firstName} ${sessionScope.user.lastName}!</span>
+                </c:if>
+                <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
+            </div>
         </div>
-        <div class="info-row">
-            <span class="label">Name:</span>
-            <span class="value">
-                <c:out value="${sessionScope.currentUser.firstName}"/>
-                <c:out value="${sessionScope.currentUser.lastName}"/>
-            </span>
+
+        <!-- Messages -->
+        <c:if test="${not empty success}">
+            <div class="message success">✅ ${success}</div>
+        </c:if>
+        <c:if test="${not empty error}">
+            <div class="message error">❌ ${error}</div>
+        </c:if>
+
+        <div class="user-info">
+            <h3>👤 Account Information</h3>
+            <c:if test="${not empty sessionScope.user}">
+                <p><strong>Username:</strong> ${sessionScope.user.username}</p>
+                <p><strong>Email:</strong> ${sessionScope.user.email}</p>
+                <p><strong>Role:</strong> ${sessionScope.user.role.name}</p>
+                <p><strong>Phone:</strong> ${sessionScope.user.phoneNumber != null ? sessionScope.user.phoneNumber : 'Not provided'}</p>
+                <p><strong>Account Standing:</strong>
+                    <c:choose>
+                        <c:when test="${sessionScope.user.accountStanding == 1}">
+                            <span class="badge badge-success">Good Standing</span>
+                        </c:when>
+                        <c:when test="${sessionScope.user.accountStanding == 2}">
+                            <span class="badge badge-warning">Suspended</span>
+                        </c:when>
+                        <c:when test="${sessionScope.user.accountStanding == 3}">
+                            <span class="badge badge-danger">Banned</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="badge badge-info">Pending Approval</span>
+                        </c:otherwise>
+                    </c:choose>
+                </p>
+            </c:if>
         </div>
-        <div class="info-row">
-            <span class="label">Account Standing:</span>
-            <span class="value">
-                <c:choose>
-                    <c:when test="${sessionScope.currentUser.accountStanding == 1}">
-                        <span class="badge badge-success">Good Standing</span>
-                    </c:when>
-                    <c:when test="${sessionScope.currentUser.accountStanding == 2}">
-                        <span class="badge badge-warning">Suspended</span>
-                    </c:when>
-                    <c:when test="${sessionScope.currentUser.accountStanding == 3}">
-                        <span class="badge badge-danger">Banned</span>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="badge badge-info">Pending Approval</span>
-                    </c:otherwise>
-                </c:choose>
-            </span>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>📚 Book Management</h3>
+                <div class="features">
+                    <div class="feature-item" onclick="alert('Search Books feature coming soon')">Search Books</div>
+                    <div class="feature-item" onclick="alert('Browse Catalog feature coming soon')">Browse Catalog</div>
+                    <div class="feature-item" onclick="alert('View Availability feature coming soon')">View Availability</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📖 My Library</h3>
+                <div class="features">
+                    <div class="feature-item" onclick="alert('Borrowed Books feature coming soon')">Borrowed Books</div>
+                    <div class="feature-item" onclick="alert('Reading History feature coming soon')">Reading History</div>
+                    <div class="feature-item" onclick="alert('Favorites feature coming soon')">Favorites</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⏰ Reservations & Holds</h3>
+                <div class="features">
+                    <div class="feature-item" onclick="alert('Place Holds feature coming soon')">Place Holds</div>
+                    <div class="feature-item" onclick="alert('View Waitlist feature coming soon')">View Waitlist</div>
+                    <div class="feature-item" onclick="alert('Reservation Status feature coming soon')">Reservation Status</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>👤 Account Management</h3>
+                <div class="features">
+                    <div class="feature-item" onclick="alert('Profile Settings feature coming soon')">Profile Settings</div>
+                    <a href="${pageContext.request.contextPath}/user/change-password" class="feature-item">Change Password</a>
+                    <div class="feature-item" onclick="alert('Notification Preferences feature coming soon')">Notification Preferences</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center; opacity: 0.8;">
+            <p>Member Role | All member features operational</p>
         </div>
     </div>
-
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <h2>Quick Actions</h2>
-        <div class="action-buttons">
-            <a href="${pageContext.request.contextPath}/user/change-password" class="btn btn-secondary">
-                Change Password
-            </a>
-        </div>
-    </div>
-
-    <!-- Placeholder for future features -->
-    <div class="placeholder-section">
-        <h2>My Checkouts</h2>
-        <p class="info-text">You currently have no books checked out.</p>
-        <p class="info-text"><em>Book checkout functionality will be available soon.</em></p>
-    </div>
-
-    <div class="placeholder-section">
-        <h2>Waitlist</h2>
-        <p class="info-text">You are not on any waitlists.</p>
-        <p class="info-text"><em>Waitlist functionality will be available soon.</em></p>
-    </div>
-</div>
-
-<jsp:include page="../common/footer.jsp"/>
+</body>
+</html>

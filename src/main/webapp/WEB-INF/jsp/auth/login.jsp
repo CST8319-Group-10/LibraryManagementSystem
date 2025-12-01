@@ -1,41 +1,211 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<jsp:include page="../common/header.jsp">
-    <jsp:param name="title" value="Login - Library Management System"/>
-</jsp:include>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px 40px 12px 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="email"]:focus, input[type="password"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 20px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-password:hover {
+            color: #333;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .message {
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        .success {
+            color: #28a745;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .test-accounts {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .test-accounts h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .test-accounts p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🔐 Login to Library System</h2>
 
-<div class="auth-container">
-    <h2>Login to Library Management System</h2>
+        <!-- Display error message if present -->
+        <c:if test="${not empty error}">
+            <div class="message error">❌ ${error}</div>
+        </c:if>
 
-    <jsp:include page="../common/messages.jsp"/>
+        <!-- Display success message if present -->
+        <c:if test="${not empty success}">
+            <div class="message success">✅ ${success}</div>
+        </c:if>
 
-    <form action="${pageContext.request.contextPath}/login" method="post" class="auth-form">
-        <div class="form-group">
-            <label for="email">Email Address:</label>
-            <input type="email" id="email" name="email" required
-                   value="<c:out value='${param.email}'/>"
-                   placeholder="Enter your email">
+        <!-- Login form -->
+        <form action="${pageContext.request.contextPath}/login" method="post">
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required
+                       placeholder="Enter your email"
+                       value="<c:out value='${param.email}'/>"
+                       autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required
+                           placeholder="Enter your password">
+                    <button type="button" class="toggle-password">👁</button>
+                </div>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Test accounts information -->
+        <div class="test-accounts">
+            <h4>🧪 Test Accounts:</h4>
+            <p><strong>Admin:</strong> admin@library.com / Admin123!</p>
+            <p><strong>Librarian:</strong> librarian@library.com / Librarian123!</p>
+            <p><strong>Member:</strong> member@library.com / Member123!</p>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required
-                   placeholder="Enter your password">
+        <!-- Navigation links -->
+        <div class="links">
+            <a href="${pageContext.request.contextPath}/register">Create Account</a>
+            <a href="${pageContext.request.contextPath}/home">Back to Home</a>
         </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Login</button>
-        </div>
-
-        <div class="form-footer">
-            <p>Don't have an account? <a href="${pageContext.request.contextPath}/register">Register here</a></p>
-        </div>
-    </form>
-
-    <div class="demo-info">
-        <h3>Demo Accounts</h3>
-        <p><strong>Admin:</strong> admin@library.com / Admin123!</p>
     </div>
-</div>
 
-<jsp:include page="../common/footer.jsp"/>
+    <script>
+        // Toggle password visibility when eye icon is clicked
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        });
+
+        // Clear error message when user starts typing
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const errorMessage = document.querySelector('.message.error');
+                if (errorMessage) {
+                    errorMessage.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
