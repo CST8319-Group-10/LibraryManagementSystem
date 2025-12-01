@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ac.cst8319.lms.model.Book2;
-import com.ac.cst8319.lms.dao.BookDao2;
+import com.ac.cst8319.lms.dao.BookDAO2;
 
 public class BookCatalog {
     // Association (One-to-Many): Manages a list of Book objects
