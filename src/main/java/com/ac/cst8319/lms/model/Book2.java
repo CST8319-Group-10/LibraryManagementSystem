@@ -1,4 +1,6 @@
 package com.ac.cst8319.lms.model;
+import java.time.Instant;
+import lombok.*;
 
 public class Book2 {
     // Attributes
@@ -50,3 +52,4 @@ public class Book2 {
     public void setAvailable(boolean isAvailable) { this.isAvailable = isAvailable; }
 
 }
+
