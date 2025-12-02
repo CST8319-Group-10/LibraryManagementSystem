@@ -2,8 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
-<%@ page import="com.lms.web.model.BookStatus" %>
-<%@ page import="com.lms.web.model.BookCopy" %>
+<%@ page import="com.ac.cst8319.lms.model.BookStatus" %>
+<%@ page import="com.ac.cst8319.lms.model.BookCopy" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -34,7 +34,7 @@
 
 			for (Map.Entry<BookCopy, BookStatus> bookCopy : bookCopies.entrySet()) {
 	%>
-				<form action="placeHoldBook" method="post">			
+				<form action="placeHoldBook" method="POST">			
 					<label for="bookCopyId">Book Copy Id</label> 
 					<input type="text" id="bookCopyId" name="bookCopyId" value="<%=bookCopy.getKey().getBookCopyId()%>">
 					<label for="status">Status</label> 
