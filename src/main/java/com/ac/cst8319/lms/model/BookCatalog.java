@@ -3,7 +3,7 @@ package com.ac.cst8319.lms.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ac.cst8319.lms.model.Book2;
+import com.ac.cst8319.lms.model.Book;
 import com.ac.cst8319.lms.dao.BookDAO2;
 
 public class BookCatalog {
@@ -16,11 +16,11 @@ public class BookCatalog {
     }
 
     // Methods for inventory management
-    public List<Book2> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void addBook(Book2 book) {
+    public void addBook(Book book) {
         this.books.add(book);
     }
 
@@ -45,3 +45,4 @@ public class BookCatalog {
     }
 
 }
+
