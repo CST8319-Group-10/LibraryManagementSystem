@@ -12,9 +12,7 @@ public class BookCatalog {
 
     public BookCatalog() {
         this.books = new ArrayList<>();
-        // Seed some initial data for demonstration purposes
-        this.books.add(new Book2(101, "The Hitchhiker's Guide", "Douglas Adams", true));
-        this.books.add(new Book2(102, "1984", "George Orwell", false));
+        // implement association to BookServelet and/or BookDAO to create booklist
     }
 
     // Methods for inventory management
@@ -45,4 +43,5 @@ public class BookCatalog {
             existingBook.setAvailable(updatedBook.isAvailable());
         }
     }
+
 }
