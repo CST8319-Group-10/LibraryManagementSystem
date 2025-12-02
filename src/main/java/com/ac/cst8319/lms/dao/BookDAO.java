@@ -1,6 +1,6 @@
 package com.ac.cst8319.lms.dao;
 
-import com.ac.cst8319.lms.model.Book2;
+import com.ac.cst8319.lms.model.Book;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class BookDAO2 {
 
     long count(); // count and return number of books
 
-    public void insertBook(Book2 book) throws SQLException {
+    public void insertBook(Book book) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BOOKS_SQL)) {
             preparedStatement.setInt(1, book.getID());
@@ -78,7 +78,7 @@ public class BookDAO2 {
         }
     }
 
-    public boolean updateBook(Book2 book) throws SQLException {
+    public boolean updateBook(Book book) throws SQLException {
         boolean rowUpdated;
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_BOOKS_SQL)) {
@@ -102,8 +102,8 @@ public class BookDAO2 {
         return rowDeleted;
     }
 
-    public Book2 selectBook(int id) throws SQLException {
-        Book2 book = null;
+    public Book selectBook(int id) throws SQLException {
+        Book book = null;
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BOOK_BY_ID)) {
             preparedStatement.setInt(1, id);
@@ -113,14 +113,14 @@ public class BookDAO2 {
                 String title = rs.getString("Title");
                 String author = rs.getString("Author");
                 boolean isAvailable = rs.getBoolean("isAvailable");
-                book = new Book2(id, title, author, isAvailable);
+                book = new Book(id, title, author, isAvailable);
             }
         }
         return book;
     }
 
-    public List<Book2> selectAllBooks() throws SQLException {
-        List<Book2> books = new ArrayList<>();
+    public List<Book> selectAllBooks() throws SQLException {
+        List<Book> books = new ArrayList<>();
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_BOOKS)) {
             ResultSet rs = preparedStatement.executeQuery();
@@ -130,9 +130,10 @@ public class BookDAO2 {
                 String title = rs.getString("Title");
                 String author = rs.getString("Author");
                 boolean isAvailable = rs.getBoolean("isAvailable");
-                books.add(new Book2(id, title, author, isAvailable));
+                books.add(new Book(id, title, author, isAvailable));
             }
         }
         return books;
     }
 }
+
