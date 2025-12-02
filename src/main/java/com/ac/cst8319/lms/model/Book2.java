@@ -6,13 +6,21 @@ public class Book2 {
     private String Author;
     private int ID;
     private boolean isAvailable; // Added an availability status attribute
+    private int genreId;               // Added field from Book.Java
+    private String publisher;
+    private String publicationYear;
+    private String description;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private Long createdBy;
+    private Long updatedBy;
 
     // Constructor added for easier object creation
     public Book2(int ID, String Title, String Author, boolean isAvailable) {
         this.ID = ID;
         this.Title = Title;
         this.Author = Author;
-        this.isAvailable = isAvailable;
+        this.isAvailable = isAvailable;    //Need implementation of added fields
     }
     
     public Book2() {
@@ -40,4 +48,5 @@ public class Book2 {
     public void setID(int ID) { this.ID = ID; }
     public boolean isAvailable() { return isAvailable; }
     public void setAvailable(boolean isAvailable) { this.isAvailable = isAvailable; }
+
 }
