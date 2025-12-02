@@ -9,7 +9,7 @@ import java.util.Optional;
 import com.ac.cst8319.lms.util.DatabaseConnection;
 
 // This class handles all persistence logic for Book objects in MySQL
-public class BookDAO2 {
+public class BookDAO {
 
     private static final String INSERT_BOOKS_SQL = "INSERT INTO books (ID, Title, Author, isAvailable) VALUES (?, ?, ?, ?);";
     private static final String SELECT_BOOK_BY_ID = "SELECT ID, Title, Author, isAvailable FROM books WHERE ID = ?;";
@@ -136,4 +136,5 @@ public class BookDAO2 {
         return books;
     }
 }
+
 
