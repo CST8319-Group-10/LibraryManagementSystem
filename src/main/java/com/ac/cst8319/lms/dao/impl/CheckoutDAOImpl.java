@@ -471,7 +471,7 @@ public class CheckoutDAOImpl implements CheckoutDAO {
      * Helper method to map ResultSet to BookHistory object.
      */
     private CheckoutDAO.BookHistory mapResultSetToBookHistory(ResultSet rs) throws SQLException {
-        Book book = mapResultSetToBook(rs, "B.");
+        Book book = mapResultSetToBook(rs, "");
         LocalDate latestCheckout = rs.getDate("CheckoutDate").toLocalDate();
 
         return new CheckoutDAO.BookHistory(book, latestCheckout);

@@ -133,6 +133,7 @@ public interface CheckoutDAO {
      */
     @AllArgsConstructor
     @NoArgsConstructor
+    @Getter
     public static class BorrowedBook {
         public Book book;
         public Checkout checkout;
@@ -148,6 +149,7 @@ public interface CheckoutDAO {
 
     @AllArgsConstructor
     @NoArgsConstructor
+    @Getter
     public static class BookHistory {
         public Book book;
         public LocalDate latestCheckout;

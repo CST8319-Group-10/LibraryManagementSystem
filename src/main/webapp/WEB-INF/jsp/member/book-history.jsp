@@ -31,7 +31,7 @@
                         <td>${hist.book.genreId}</td>
                         <td><c:out value="${hist.book.publisher}"/></td>
                         <td>${hist.book.publicationYear}</td>
-                        <td>${bb.latestCheckout}</td>
+                        <td>${hist.latestCheckout}</td>
                     </tr>
                 </c:forEach>
             </tbody>
