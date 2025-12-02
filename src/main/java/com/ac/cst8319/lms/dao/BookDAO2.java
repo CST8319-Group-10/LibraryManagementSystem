@@ -4,6 +4,7 @@ import com.ac.cst8319.lms.model.Book2;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ac.cst8319.lms.util.DatabaseConnection;
 
@@ -21,6 +22,48 @@ public class BookDAO2 {
     }
 
     // --- CRUD Operations ---
+    /**
+     * Find a book by its ID.
+     * @param bookId the book ID
+     * @return Optional containing the book if found, empty otherwise
+     */
+    Optional<Book> findById(long bookId);
+
+    /**
+     * Find a book by its ISBN.
+     * @param isbn the ISBN
+     * @return Optional containing the book if found, empty otherwise
+     */
+    Optional<Book> findByISBN(String isbn);
+
+    /**
+     * Find all books in the system.
+     * @return List of all books
+     */
+    List<Book> findAll();
+
+    /**
+     * Search books by title, author name, or ISBN.
+     * @param searchTerm the search term
+     * @return List of matching books
+     */
+    List<Book> search(String searchTerm);
+
+    /**
+     * Find books by author ID.
+     * @param authorId the author ID
+     * @return List of books by the author
+     */
+    List<Book> findByAuthor(long authorId);
+
+    /**
+     * Find books by genre ID.
+     * @param genreId the genre ID
+     * @return List of books in the genre
+     */
+
+
+    long count(); // count and return number of books
 
     public void insertBook(Book2 book) throws SQLException {
         try (Connection connection = getConnection();
