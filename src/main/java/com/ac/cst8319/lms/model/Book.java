@@ -2,7 +2,7 @@ package com.ac.cst8319.lms.model;
 import java.time.Instant;
 import lombok.*;
 
-public class Book2 {
+public class Book {
     // Attributes
     private String Title;
     private String Author;
@@ -18,14 +18,14 @@ public class Book2 {
     private Long updatedBy;
 
     // Constructor added for easier object creation
-    public Book2(int ID, String Title, String Author, boolean isAvailable) {
+    public Book(int ID, String Title, String Author, boolean isAvailable) {
         this.ID = ID;
         this.Title = Title;
         this.Author = Author;
         this.isAvailable = isAvailable;    //Need implementation of added fields
     }
     
-    public Book2() {
+    public Book() {
     }
 
     // Methods (Getters and Setters are sufficient for JSP/Servlet interaction)
@@ -52,4 +52,5 @@ public class Book2 {
     public void setAvailable(boolean isAvailable) { this.isAvailable = isAvailable; }
 
 }
+
 
