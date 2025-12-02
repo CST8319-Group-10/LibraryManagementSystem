@@ -262,7 +262,6 @@ public class LibraryOperationsService {
     /**
      * Process fee payment for an overdue checkout.
      * @param checkoutId the checkout ID
-     * @param librarianId the librarian processing the return
      * @return the updated checkout record
      * @throws IllegalArgumentException if validation fails
      */
