@@ -19,6 +19,12 @@ public class Author {
     private Instant createdAt;
     private Instant updatedAt;
 
+	public Author(AuthorBuilder builder) {
+		this.authorId = builder.authorId;
+		this.firstName = builder.firstName;
+		this.lastName = builder.lastName;
+	}
+
 	public void setFullName(String fullName) {
 		String[] names = fullName.split(" ");
 		this.firstName = names[0];
