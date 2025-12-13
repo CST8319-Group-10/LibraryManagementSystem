@@ -22,8 +22,14 @@
 	
 	<h2>Place Hold on Available Book</h2><br>
 	
-	<p><%=message%></p><br>
-	
+	<%
+		if(bookStatus == null){
+	%>
+			<p><%=message%></p><br>
+	<%
+		}
+		else{
+	%>
 	<table>
 			<tr>
 				<th>Book Copy Id</th>
@@ -35,6 +41,11 @@
 				<td><%=bookStatus.getName()%></td>
 				<td><%=bookCopy.getLocation()%></td>
 			</tr>
-	</table>		
+	</table>
+	
+	<p><%=message%></p><br>
+	<%
+		}
+	%>		
 </body>
 </html>

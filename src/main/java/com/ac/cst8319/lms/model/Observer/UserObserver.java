@@ -38,7 +38,7 @@ public class UserObserver implements Observer{
 	public void bookAvailable() {
 		String subject = "A Book is Available";
 		String fromName = "LibraryManagementSystem";
-		String fromEmail = "";
+		String fromEmail = "Devel";
 		String toName = waitListUser.getFirstName() + " " + waitListUser.getLastName();
 		String toEmail = waitListUser.getEmail();
 		String message = "The book with the title " + bookWaitList.getTitle() + " is available to be borrowed from the library.";

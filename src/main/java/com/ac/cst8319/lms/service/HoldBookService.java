@@ -29,7 +29,7 @@ public class HoldBookService {
 	/**
 	 * Confirming the availability of a book
 	 * @param bookCopy the book copy that has it's availability confirmed
-	 * @return book's availability
+	 * @return the book's availability
 	 * @throws SQLException if the book cannot be found
 	 */
 	public BookStatus checkBookStatus(BookCopy bookCopy) throws SQLException{
@@ -51,8 +51,10 @@ public class HoldBookService {
 	
 	/**
 	 * Placing hold on an available book
-	 * @param bookCopy the bookCopy that has a hold placed on it
+	 * @param bookCopy the book copy that has a hold placed on it
 	 * @param bookStatus the book's availability that will be updated after placing a hold
+	 * @param user the user that placed a hold a book
+	 * @param book the book that has a hold placed on it
 	 * @return updated book's availability that was updated after placing a hold 
 	 * @throws IllegalArgumentException if the book's availability couldn't be updated
 	 */
@@ -65,7 +67,6 @@ public class HoldBookService {
 			emailAvailableBookWithHold(user, book, bookCopy);
 		}
 		else if(result == 0){
-			bookStatus.setName("Available");
 			throw new IllegalArgumentException("Book's availability couldn't be updated.");
 		}
 		return bookStatus;	
@@ -119,29 +120,29 @@ public class HoldBookService {
 	
 	/**
 	 * Updating the wait list after a book was returned
-	 * @param book the book that has it's wait list updated
+	 * @param book the book that has its wait list updated
 	 * @return the wait list that was updated after a book is returned
 	 * @throws NullPointerException if the wait list contains no users
 	 * @throws SQLException if the wait list size is inconsistent with how many users in the wait list moved up one in the wait list
 	 */
-	public Map<User, WaitList> updateWaitlist(Book book) throws NullPointerException, SQLException {
+	public Map<User, WaitList> updateWaitList(Book book) throws NullPointerException, SQLException {
 		
 		Book returnedBook = holdBookDao.returnBookDetails(book);
-		Map<User, WaitList> waitlistUsers = holdBookDao.returnWaitListUsers(returnedBook.getBookId());
+		Map<User, WaitList> waitListUsers = holdBookDao.returnWaitListUsers(returnedBook.getBookId());
 		
-		if(waitlistUsers.size() > 0) {
+		if(waitListUsers.size() > 0) {
 			
 			int result = holdBookDao.removeNextUserWaitlist(returnedBook.getBookId());
 			int count = holdBookDao.waitListUserUpdate(returnedBook.getBookId());
 			count++;
-			int size = waitlistUsers.size();
+			int size = waitListUsers.size();
 			
 			if(result == 1 && count == size) {
-				Map<User, WaitList> updatedWaitlistUsers = holdBookDao.returnWaitListUsers(returnedBook.getBookId());
-				return updatedWaitlistUsers;
+				Map<User, WaitList> updatedWaitListUsers = holdBookDao.returnWaitListUsers(returnedBook.getBookId());
+				return updatedWaitListUsers;
 			}
 			else {
-				throw new SQLException("Couldn't remove first user in waitlist or update all users in the wait list.");
+				throw new SQLException("Couldn't remove first user in wait list or update all users in the wait list.");
 			}
 		}
 		else {

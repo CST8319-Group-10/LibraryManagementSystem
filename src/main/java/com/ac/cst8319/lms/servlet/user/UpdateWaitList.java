@@ -25,7 +25,7 @@ public class UpdateWaitList extends HttpServlet {
 	/**
 	 * Handling HTTP requests to render a view for updating a book's wait list
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getParameter("action");
 		
@@ -59,7 +59,7 @@ public class UpdateWaitList extends HttpServlet {
 		try {
 			HoldBookService holdBookService = new HoldBookService();
 			holdBookService.subjectNotifyObservers(book);
-			updatedWaitlistUsers = holdBookService.updateWaitlist(book);
+			updatedWaitlistUsers = holdBookService.updateWaitList(book);
 			message = "Updated the waitlist successfully.";
 		}
 		catch(Exception e) {

@@ -23,7 +23,7 @@ import com.ac.cst8319.lms.service.HoldBookService;
  * Servlet implementation class PlaceHoldOnAvailableBook
  * @author Ashleigh Eagleson
  */
-@WebServlet(name = "PlaceHoldOnAvailableBook", urlPatterns = "/user/PlaceHoldOnAvailableBook")
+@WebServlet(name = "PlaceHoldOnAvailableBook", urlPatterns = "/user/placeHoldOnAvailableBook")
 public class PlaceHoldOnAvailableBook extends HttpServlet {
 
 	/**
@@ -58,17 +58,11 @@ public class PlaceHoldOnAvailableBook extends HttpServlet {
 		try {
 			HoldBookService holdBookService = new HoldBookService();
 			updatedBookStatus = holdBookService.placeHoldOnAvailableBook(bookCopy, currentBookStatus, user, book);
-			
-			if(updatedBookStatus != null) {
-				message = "Placing a hold on the book was successful.";
-			}
-			else {
-				message = "A hold couldn't be placed on the book.";
-			}
-			
+			message = "Placing a hold on the book was successful.";
 		}
 		catch(IllegalArgumentException e) {
 			e.printStackTrace();
+			message = "A hold couldn't be placed on the book.";
 		}	
 		
 		request.setAttribute("bookCopy", bookCopy);
