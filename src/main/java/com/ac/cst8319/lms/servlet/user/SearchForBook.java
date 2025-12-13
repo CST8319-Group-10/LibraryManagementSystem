@@ -25,7 +25,7 @@ public class SearchForBook extends HttpServlet {
 	/**
 	 * Handling HTTP requests to search for books by title or author
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		/*
 		HTTPSession session = request.getSession(false);
@@ -37,7 +37,6 @@ public class SearchForBook extends HttpServlet {
 		*/
 		
 		String action = request.getParameter("action");
-		
 		if(action != null) {
 			if(action.equals("access")) {
 				request.getRequestDispatcher("/WEB-INF/jsp/user/SearchForBook.jsp").forward(request, response);

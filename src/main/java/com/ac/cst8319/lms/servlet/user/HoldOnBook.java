@@ -27,7 +27,7 @@ public class HoldOnBook extends HttpServlet {
 	/**
 	 * Handling HTTP requests by determining whether placing hold on an available or unavailable book
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		/*
 		HTTPSession session = request.getSession(false);
@@ -44,14 +44,14 @@ public class HoldOnBook extends HttpServlet {
 		try {
 			HoldBookService holdBookService = new HoldBookService();
 			BookStatus currentBookStatus = holdBookService.checkBookStatus(bookCopy);
-			request.setAttribute("currentBookStatus", currentBookStatus);
+			request.setAttribute("currentBookStatus", currentBookStatus.getName());
 			
 			if(currentBookStatus.getName().equals("Available")) {
-				request.getRequestDispatcher("/user/PlaceHoldOnAvailableBook").forward(request, response);
+				request.getRequestDispatcher("/user/placeHoldOnAvailableBook").forward(request, response);
 				return;
 			}
 			else if(currentBookStatus.getName().equals("Unavailable")){
-				request.getRequestDispatcher("/user/PlaceHoldOnUnavailableBook").forward(request, response);
+				request.getRequestDispatcher("/user/placeHoldOnUnavailableBook").forward(request, response);
 				return;
 			}
 		}

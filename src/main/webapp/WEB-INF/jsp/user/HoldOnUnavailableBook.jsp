@@ -22,8 +22,14 @@
 	
 	<h2>Place Hold on Unavailable Book</h2>
 	
-	<p><%=message%></p>
-	
+	<%
+		if(waitList == null){
+	%>
+			<p><%=message%></p>
+	<%
+		}
+		else{
+	%>
 	<table>
 			<tr>
 				<th>Book Title</th>
@@ -33,6 +39,11 @@
 				<td><%=book.getTitle()%></td>
 				<td><%=waitList.getPosition()%></td>
 			</tr>
-	</table>
+	</table><br>
+	
+	<p><%=message%></p>
+	<%
+		}
+	%>
 </body>
 </html>

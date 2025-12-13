@@ -19,7 +19,7 @@ import com.ac.cst8319.lms.service.HoldBookService;
  * Servlet implementation class PlaceHoldOnUnavailableBook
  * @author Ashleigh Eagleson
  */
-@WebServlet(name = "PlaceHoldOnUnavailableBook", urlPatterns = "/user/PlaceHoldOnUnavailableBook")
+@WebServlet(name = "PlaceHoldOnUnavailableBook", urlPatterns = "/user/placeHoldOnUnavailableBook")
 public class PlaceHoldOnUnavailableBook extends HttpServlet {
 
 	/**
@@ -47,16 +47,11 @@ public class PlaceHoldOnUnavailableBook extends HttpServlet {
 		try {
 			HoldBookService holdBookService = new HoldBookService();
 			userWaitList = holdBookService.placeHoldOnUnavailableBook(book, user);
-			
-			if(userWaitList != null) {
-				message = "Placing a hold on the book and joining its waitlist was successful.";
-			}
-			else {
-				message = "Couldn't place a hold on the book nor join its waitlist.";
-			}
+			message = "Placing a hold on the book and joining its waitlist was successful.";
 		}
 		catch(IllegalArgumentException e) {
 			e.printStackTrace();
+			message = "Couldn't place a hold on the book nor join its waitlist.";
 		}
 		
 		request.setAttribute("waitlist", userWaitList);

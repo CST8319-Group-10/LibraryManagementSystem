@@ -59,8 +59,8 @@
 	<%			
 			}
 	%>
-		</table><br>	
-		<p><%=message%></p>		
+		</table><br>
+		<p><%=message%></p>			
 	<%
 		}	
 	%>

@@ -47,6 +47,7 @@ public class HoldBookDao {
 				BookStatus bookStatus = new BookStatusBuilder().setStatusId(rs.getInt("BookStatusID")).setName(rs.getString("Name")).setDescription(rs.getString("Description")).build();
 				bookCopyStatus.put(bookCopy, bookStatus);
 			}
+
 			DBConnection.closeConnection(connection);
 			return bookCopyStatus;
 			
