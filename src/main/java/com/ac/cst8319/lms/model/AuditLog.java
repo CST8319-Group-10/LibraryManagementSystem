@@ -18,6 +18,4 @@ public class AuditLog {
     private String ipAddress;
     private Instant createdAt;
 
-    /* TODO: Add the JOINed members as needed by services
-    */
 }

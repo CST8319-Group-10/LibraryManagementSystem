@@ -3,6 +3,9 @@ package com.ac.cst8319.lms.model;
 
 import lombok.*;
 
+/**
+ * Genre DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,6 +17,10 @@ public class Genre {
     private String name;
     private String description;
 
+	/**
+	 * Builder enabling constructor.
+	 * @param builder The builder to use for parameters.
+	 */
 	public Genre(GenreBuilder builder) {
 		this.genreId = builder.genreId;
 		this.name = builder.name;

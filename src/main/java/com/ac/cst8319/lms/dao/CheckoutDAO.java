@@ -129,7 +129,7 @@ public interface CheckoutDAO {
     BigDecimal calcTotalFeesOwedByMember(long userId);
 
     /**
-     * Convience tuple for returning join'ed results.
+     * Convenience tuple for returning join'ed results.
      */
     @AllArgsConstructor
     @NoArgsConstructor

@@ -4,6 +4,9 @@ import com.ac.cst8319.lms.model.Prototype.BookStatusClone;
 
 import lombok.*;
 
+/**
+ * Book DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,6 +18,10 @@ public class BookStatus implements BookStatusClone {
     private String name;
     private String description;
 
+	/**
+	 * Builder enabling constructor.
+	 * @param builder The builder to use for parameters.
+	 */
 	public BookStatus(BookStatusBuilder builder) {
 		this.statusId = builder.statusId;
 		this.name = builder.name;

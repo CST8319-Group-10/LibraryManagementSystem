@@ -7,21 +7,30 @@ import java.util.List;
 
 import com.ac.cst8319.lms.util.DatabaseConnection;
 
-// This class handles all persistence logic for Book objects in MySQL
+/**
+ * This class handles all persistence logic for Book objects in MySQL
+ */
 public class BookDAO2 {
 
+    /** SQL Query for insertion */
     private static final String INSERT_BOOKS_SQL = "INSERT INTO books (ID, Title, Author, isAvailable) VALUES (?, ?, ?, ?);";
+    /** SQL Query for book retrieval by id. */
     private static final String SELECT_BOOK_BY_ID = "SELECT ID, Title, Author, isAvailable FROM books WHERE ID = ?;";
+    /** SQL Query for retrieving all books. */
     private static final String SELECT_ALL_BOOKS = "SELECT * FROM books;";
+    /** SQL Query for deleting books by id. */
     private static final String DELETE_BOOKS_SQL = "DELETE FROM books WHERE ID = ?;";
+    /** SQL Query for updating a book object. */
     private static final String UPDATE_BOOKS_SQL = "UPDATE books SET Title = ?, Author = ?, isAvailable = ? WHERE ID = ?;";
 
     protected Connection getConnection() throws SQLException {
         return DatabaseConnection.getConnection();
     }
 
-    // --- CRUD Operations ---
-
+    /**
+     * Insert book into the database
+     * @param book The book object to insert.
+     */
     public void insertBook(Book2 book) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(INSERT_BOOKS_SQL)) {
@@ -35,6 +44,11 @@ public class BookDAO2 {
         }
     }
 
+    /**
+     * Update a book object in the database.
+     * @param book The book object to update.
+     * @return True if successful.
+     */
     public boolean updateBook(Book2 book) throws SQLException {
         boolean rowUpdated;
         try (Connection connection = getConnection();
@@ -49,6 +63,12 @@ public class BookDAO2 {
         return rowUpdated;
     }
 
+    /**
+     * Delete a book by id from the database.
+     * @param id id of the book to delete.
+     * @return True if successful.
+     * @throws SQLException If an error occurred deleting the book.
+     */
     public boolean deleteBook(int id) throws SQLException {
         boolean rowDeleted;
         try (Connection connection = getConnection();
@@ -59,6 +79,12 @@ public class BookDAO2 {
         return rowDeleted;
     }
 
+    /**
+     * Retrieve book by id from the database.
+     * @param id The id of the book to retrieve.
+     * @return Book object corresponding to id.
+     * @throws SQLException If an error occurred retrieving the book.
+     */
     public Book2 selectBook(int id) throws SQLException {
         Book2 book = null;
         try (Connection connection = getConnection();
@@ -76,6 +102,11 @@ public class BookDAO2 {
         return book;
     }
 
+    /**
+     * Retrieve all books from the database.
+     * @return A list of all books.
+     * @throws SQLException If an error occurs retrieving all books.
+     */
     public List<Book2> selectAllBooks() throws SQLException {
         List<Book2> books = new ArrayList<>();
         try (Connection connection = getConnection();

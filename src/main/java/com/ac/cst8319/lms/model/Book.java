@@ -4,6 +4,9 @@ import java.time.Instant;
 
 import lombok.*;
 
+/**
+ * Book DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,6 +27,10 @@ public class Book {
     private Long createdBy;
     private Long updatedBy;
 
+    /**
+     * Builder enabling constructor.
+     * @param builder The builder to get parameters from.
+     */
     public Book(BookBuilder builder) {
 		this.bookId = builder.bookId;
 		this.isbn = builder.isbn;

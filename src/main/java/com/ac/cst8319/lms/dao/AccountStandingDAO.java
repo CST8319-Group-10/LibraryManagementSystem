@@ -12,6 +12,7 @@ public interface AccountStandingDAO {
     /**
      * Find an account standing by its ID.
      * @param standingId the standing ID
+     * @throws RuntimeException If the standing could not be found
      * @return Optional containing the standing if found, empty otherwise
      */
     Optional<AccountStanding> findById(int standingId);
@@ -19,13 +20,15 @@ public interface AccountStandingDAO {
     /**
      * Find an account standing by its name.
      * @param name the standing name
+     * @throws RuntimeException If the standing could not be found
      * @return Optional containing the standing if found, empty otherwise
      */
     Optional<AccountStanding> findByName(String name);
 
     /**
-     * Find all account standings in the system.
-     * @return List of all standings
+     * Retrieve all AccountStanding objects.
+     * @throws RuntimeException If an error occurred retrieving all account standing objects.
+     * @return List of all standing objects.
      */
     List<AccountStanding> findAll();
 }

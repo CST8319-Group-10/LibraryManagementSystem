@@ -12,6 +12,9 @@ import com.mailersend.sdk.exceptions.MailerSendException;
 
 import lombok.extern.java.Log;
 
+/**
+ * Class encapsulating interacting the third party email API.
+ */
 @Log
 public class Mailer {
     private static final String PROPERTIES_FILE = "mail.properties";
@@ -19,6 +22,11 @@ public class Mailer {
     private static String domainName;
     private static String apiToken;
 
+    /**
+     * Remove's leading and trailing quotations from strings.
+     * @param str The string to strip leading and trailing quotation marks from.
+     * @return The string without leading and trailing quotation marks.
+     */
     static private String deQuote(String str) {
         if (str.startsWith("\"")) {
             str = str.substring(1, str.length());
@@ -28,6 +36,7 @@ public class Mailer {
         }
         return str;
     }
+
     static {
         // Load database properties when class is initialized
         try (InputStream input = DatabaseConnection.class.getClassLoader()
@@ -45,6 +54,15 @@ public class Mailer {
         }
     }
 
+    /**
+     * Send an email using the third party API.
+     * @param subject The subject line of the email.
+     * @param fromName The name of the sender.
+     * @param fromEmail The first part of the email (i.e. "xxxx" for xxxx@domain.com)
+     * @param toName The name of the recipient.
+     * @param toEmail The full email address of the recipient.
+     * @param message The message text.
+     */
     public static void sendEmail(String subject,
                                  String fromName, String fromEmail,
                                  String toName, String toEmail,

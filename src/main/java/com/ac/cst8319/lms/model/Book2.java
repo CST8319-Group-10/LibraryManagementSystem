@@ -1,5 +1,8 @@
 package com.ac.cst8319.lms.model;
 
+/**
+ * Book entity DTO.
+ */
 public class Book2 {
     // Attributes
     private String Title;
