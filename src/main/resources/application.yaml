@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/lms
     username: root # ← Change this to your MySQL username
-    password: yourpassword # ← Change this to your MySQL password
+    password: yan1jun10 # ← Change this to your MySQL password
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 
