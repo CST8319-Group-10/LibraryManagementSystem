@@ -2,6 +2,7 @@ package com.ac.cst8319.lms.model.Observer;
 
 import com.ac.cst8319.lms.model.Book;
 import com.ac.cst8319.lms.model.Observer.Observer;
+import com.ac.cst8319.lms.util.Mailer;
 import com.ac.cst8319.lms.model.User;
 //import com.ac.cst8319.lms.util.*;
 
@@ -21,14 +22,12 @@ public class UserObserver implements Observer{
 	public void shiftWaitList() {
 		String subject = "Wait List Update";
 		String fromName = "LibraryManagementSystem";
-		String fromEmail = "";
+		String fromEmail = "notification";
 		String toName = waitListUser.getFirstName() + " " + waitListUser.getLastName();
 		String toEmail = waitListUser.getEmail();
 		String message = "You have moved up one in the waitlist for the book with the title " + bookWaitList.getTitle() + ".";
 
-		/*
 		 Mailer.sendEmail(subject, fromName, fromEmail, toName, toEmail, message);
-		 */
 	}
 	
 	/**
@@ -38,15 +37,14 @@ public class UserObserver implements Observer{
 	public void bookAvailable() {
 		String subject = "A Book is Available";
 		String fromName = "LibraryManagementSystem";
-		String fromEmail = "Devel";
+		String fromEmail = "notification";
 		String toName = waitListUser.getFirstName() + " " + waitListUser.getLastName();
 		String toEmail = waitListUser.getEmail();
 		String message = "The book with the title " + bookWaitList.getTitle() + " is available to be borrowed from the library.";
 
-		/*
 		Mailer.sendEmail(subject, fromName, fromEmail, toName, toEmail, message);
-		 */
 	}
+
 	@Override
 	public void setWaitListUser(User waitListUser) {
 		this.waitListUser = waitListUser;
