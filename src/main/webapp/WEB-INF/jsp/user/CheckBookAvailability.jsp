@@ -14,10 +14,12 @@
 	<%
 		Map<BookCopy, BookStatus> bookCopies = (Map<BookCopy, BookStatus>)request.getAttribute("bookCopies");
 		String bookTitle = (String)request.getAttribute("bookTitle");
+		String message = (String)request.getAttribute("message");
 	%>
 	<nav>
-		<a href="BrowseByGenre.jsp">Browse</a> 
-		<a href="SearchForBook.jsp">Search</a>
+		<a href="${pageContext.request.contextPath}/user/browseByGenre?action=access">Browse</a> 
+		<a href="${pageContext.request.contextPath}/user/searchForBook?action=access">Search</a>
+		<a href="${pageContext.request.contextPath}/user/returnBookUpdateWaitList?action=access">Update Wait List</a>
 	</nav>
 	
 	<h2>Check Availability of <%=bookTitle%></h2><br>
@@ -27,14 +29,12 @@
 		if (bookCopies == null) {
 	%>
 		<p>Search or browse for a book, then click it to view its availability.</p>
-
 	<%
 		}
 		else {
-
 			for (Map.Entry<BookCopy, BookStatus> bookCopy : bookCopies.entrySet()) {
 	%>
-				<form action="placeHoldBook" method="POST">			
+				<form action="${pageContext.request.contextPath}/user/placeHoldOnBook?bookTitle=<%=bookTitle%>" method="POST">			
 					<label for="bookCopyId">Book Copy Id</label> 
 					<input type="text" id="bookCopyId" name="bookCopyId" value="<%=bookCopy.getKey().getBookCopyId()%>">
 					<label for="status">Status</label> 
@@ -47,5 +47,6 @@
 			}
 		}
 	%>	
+	<p><%=message%></p>
 </body>
 </html>

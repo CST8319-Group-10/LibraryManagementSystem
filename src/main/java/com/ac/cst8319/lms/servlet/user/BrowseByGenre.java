@@ -1,4 +1,4 @@
-package com.ac.cst8319.lms.servlet;
+package com.ac.cst8319.lms.servlet.user;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,36 +12,55 @@ import java.util.Map;
 import com.ac.cst8319.lms.model.Author;
 import com.ac.cst8319.lms.model.Book;
 import com.ac.cst8319.lms.model.Genre;
+import com.ac.cst8319.lms.model.GenreBuilder;
 import com.ac.cst8319.lms.service.FindBookService;
 
 /**
  * Servlet implementation class BrowseByGenre
+ * @author Ashleigh Eagleson
  */
-@WebServlet("/browseByGenre")
+@WebServlet(name = "BrowseByGenre", urlPatterns = "/user/browseByGenre")
 public class BrowseByGenre extends HttpServlet {
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	/**
+	 * Handling HTTP requests to browse for books by genre
+	 */
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		/*
+		*HTTPSession session = request.getSession(false);
+		*UserAccount currentUser = SessionUtil.getCurrentUser(session);
+		
+		if(currentUser == null){
+			response.sendRedirect(request.getContextPath() + "/login");
+		}
+		*/
+		
+		String action = request.getParameter("action");
+		if(action != null) {
+			if(action.equals("access")) {
+				request.getRequestDispatcher("/WEB-INF/jsp/user/BrowseByGenre.jsp").forward(request, response);
+			}			
+		}
 		
 		String genreName = request.getParameter("genre");
-		Genre genre = new Genre();
-		genre.setName(genreName);
+		Genre genre = new GenreBuilder().setName(genreName).build();
 		
 		Map<Book, Author> books = new HashMap();
 		String message = "";
 		
 		try {
-			//Browse for books in a genre
 			FindBookService findBookService = new FindBookService();
 			books = findBookService.browseByGenre(genre);
 			message = "Browsing for books under the genre of " + genreName.toLowerCase() + " was successful.";
 		}
 		catch(IllegalArgumentException e) {
 			e.printStackTrace();
-			message = "The genre of " + genreName.toLowerCase() + " couldn't be found and no books can be browsed.";
+			message = "Couldn't find any books in the genre of " + genreName.toLowerCase() + " that was specified.";
 		}
 		
 		request.setAttribute("message", message);
 		request.setAttribute("books", books);
-		request.getRequestDispatcher("BrowseByGenre.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/jsp/user/BrowseByGenre.jsp").forward(request, response);
 	}
 }

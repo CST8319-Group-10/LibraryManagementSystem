@@ -16,15 +16,16 @@
 		String message = (String)request.getAttribute("message");
 	%>
 	<nav>
-		<a href="BrowseByGenre.jsp">Browse</a> 
-		<a href="SearchForBook.jsp">Search</a>
+		<a href="${pageContext.request.contextPath}/user/browseByGenre?action=access">Browse</a> 
+		<a href="${pageContext.request.contextPath}/user/searchForBook?action=access">Search</a>
+		<a href="${pageContext.request.contextPath}/user/returnBookUpdateWaitList?action=access">Update Wait List</a>
 	</nav>
 	
 	<h2>Search For Books</h2><br>
 	
 	<h4>Search By Title</h4><br>
 	
-	<form action="searchForBook" method="GET">
+	<form action="${pageContext.request.contextPath}/user/searchForBook" method="GET">
 		<label for="title">Title</label>
 		<input type="text" id="title" name="bookTitle">
 		<input type="submit" value="Search">
@@ -32,7 +33,7 @@
 	
 	<h4>Search By Author</h4><br>
 	
-	<form action="searchForBook" method="GET">
+	<form action="${pageContext.request.contextPath}/user/searchForBook" method="GET">
 		<label for="author">Author</label>
 		<input type="text" id="author" name="bookAuthor">
 		<input type="submit" value="Search">
@@ -42,7 +43,7 @@
 	
 	<!--Controls whether book copies were found after searching by title or author-->	
 	<%
-		if (message == null){
+		if (books == null){
 	%>
 			<p>Search by title or author to search for books.</p>
 	<%
@@ -50,7 +51,7 @@
 		else {
 			for (Map.Entry<Book, Author> book : books.entrySet()) {	
 	%>
-				<form action="checkBookAvailability" method="GET">			
+				<form action="${pageContext.request.contextPath}/user/checkBookAvailability" method="GET">			
 					<label for="title">Title</label> 
 					<input type="text" id="title" name="bookTitle" value="<%=book.getKey().getTitle()%>">
 					<label for="firstName">Author's First Name</label> 
@@ -68,8 +69,8 @@
 	<%
 			}
 	%>
-			<p><%=message%></p>
-	<%
+		<p><%=message%></p>
+	<%		
 		}
 	%>
 </body>

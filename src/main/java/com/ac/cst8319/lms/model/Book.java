@@ -2,7 +2,6 @@ package com.ac.cst8319.lms.model;
 
 import java.time.Instant;
 
-
 import lombok.*;
 
 @Getter
@@ -25,6 +24,14 @@ public class Book {
     private Long createdBy;
     private Long updatedBy;
 
-    /* TODO: Add the JOINed members as needed by services
-    */
+    public Book(BookBuilder builder) {
+		this.bookId = builder.bookId;
+		this.isbn = builder.isbn;
+		this.title = builder.title;
+		this.authorId = builder.authorId;
+		this.genreId = builder.genreId;
+		this.publisher = builder.publisher;
+		this.publicationYear = builder.publicationYear;
+		this.description = builder.description;
+	}
 }
