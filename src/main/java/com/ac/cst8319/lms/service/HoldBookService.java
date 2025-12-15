@@ -100,7 +100,7 @@ public class HoldBookService {
 	 * @param book the book that has a hold placed on it
 	 * @param user the user that placed a hold on a book
 	 * @return wait list that is updated after a hold is placed on a book
-	 * @throws SQLException if the wait list couldn't be updated
+	 * @throws IllegalArgumentException if the wait list couldn't be updated
 	 */
 	public WaitList placeHoldOnUnavailableBook(Book book, User user) throws IllegalArgumentException {
 		
