@@ -169,7 +169,7 @@
             <div class="card">
                 <h3>📚 Book Management</h3>
                 <div class="features">
-                    <div class="feature-item" onclick="alert('Search Books feature coming soon')">Search Books</div>
+                    <a href="${pageContext.request.contextPath}/user/searchForBook" class="feature-item">Search Books</a>
                     <div class="feature-item" onclick="alert('Browse Catalog feature coming soon')">Browse Catalog</div>
                     <div class="feature-item" onclick="alert('View Availability feature coming soon')">View Availability</div>
                 </div>
