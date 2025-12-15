@@ -1,7 +1,6 @@
 package com.ac.cst8319.lms.util;
 
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
