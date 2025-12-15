@@ -1,4 +1,4 @@
-package com.ac.cst8319.lms.controller;
+package com.ac.cst8319.lms.servlet;
 
 import com.ac.cst8319.lms.model.Book2;
 import com.ac.cst8319.lms.model.BookCatalog;
