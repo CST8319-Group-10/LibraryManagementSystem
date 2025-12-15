@@ -34,7 +34,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "SELECT * FROM bookcopy INNER JOIN bookstatus ON bookcopy.StatusID = bookstatus.BookStatusID WHERE bookCopyID = ?";
+			String sql = "SELECT * FROM BookCopy INNER JOIN BookStatus ON BookCopy.StatusID = BookStatus.BookStatusID WHERE bookCopyID = ?";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			
 			pstatement.setLong(1, bookCopyId);
@@ -66,7 +66,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "UPDATE bookcopy SET StatusID = ? WHERE BookCopyId = ?";
+			String sql = "UPDATE BookCopy SET StatusID = ? WHERE BookCopyId = ?";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			
 			pstatement.setInt(1, 2);
@@ -94,7 +94,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "INSERT INTO waitlist (BookID, UserID, Position) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO Waitlist (BookID, UserID, Position) VALUES (?, ?, ?)";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			
 			pstatement.setLong(1, bookId);
@@ -121,7 +121,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "SELECT * FROM book WHERE Title = ?";
+			String sql = "SELECT * FROM Book WHERE Title = ?";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			
 			pstatement.setString(1, book.getTitle());
@@ -151,7 +151,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "SELECT position FROM waitlist WHERE BookID = ? ORDER BY WaitlistID DESC LIMIT ?";
+			String sql = "SELECT position FROM WaitList WHERE BookID = ? ORDER BY WaitlistID DESC LIMIT ?";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			
 			int lastRow = 1;
@@ -184,7 +184,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "UPDATE waitlist SET Position = ? WHERE UserID = ? ORDER BY Position ASC";
+			String sql = "UPDATE WaitList SET Position = ? WHERE UserID = ? ORDER BY Position ASC";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			
 			Map<User, WaitList> waitListUsers = returnWaitListUsers(bookId);
@@ -224,7 +224,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "DELETE FROM waitlist WHERE UserID = ?";
+			String sql = "DELETE FROM WaitList WHERE UserID = ?";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			
 			Map<User, WaitList> waitListUsers = returnWaitListUsers(bookId);
@@ -255,7 +255,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String sql = "SELECT * FROM useraccount INNER JOIN waitlist ON useraccount.UserID = waitlist.UserID WHERE waitlist.BookID = ?";
+			String sql = "SELECT * FROM UserAccount INNER JOIN WaitList ON UserAccount.UserID = WaitList.UserID WHERE WaitList.BookID = ?";
 			PreparedStatement pstatement = connection.prepareStatement(sql);
 			pstatement.setLong(1, bookId);
 			
@@ -289,7 +289,7 @@ public class HoldBookDao {
 		try {
 			Connection connection = DatabaseConnection.getConnection();
 			
-			String userSql = "SELECT * FROM useraccount WHERE UserID = ?";
+			String userSql = "SELECT * FROM UserAccount WHERE UserID = ?";
 			PreparedStatement userPstatement = connection.prepareStatement(userSql);
 			
 			userPstatement.setLong(1, user.getUserId());
@@ -299,7 +299,7 @@ public class HoldBookDao {
 				user = new UserBuilder().setEmail(userRs.getString("Email")).setFirstName(userRs.getString("FirstName")).setLastName(userRs.getString("LastName")).setPhone(userRs.getString("Phone")).setAddress(userRs.getString("Address")).build();
 			}
 			
-			String bookSql = "SELECT * FROM book WHERE Title = ?";
+			String bookSql = "SELECT * FROM Book WHERE Title = ?";
 			PreparedStatement bookPstatement = connection.prepareStatement(bookSql);
 			
 			bookPstatement.setString(1, book.getTitle());
