@@ -3,7 +3,7 @@ package com.ac.cst8319.lms.model.Prototype;
 import com.ac.cst8319.lms.model.BookStatus;
 
 /**
- * 
+ * A helper class for cloning BookStatus objects.
  */
 public class BookStatusClient {
 	

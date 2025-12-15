@@ -25,7 +25,7 @@ public class UserObserver implements Observer{
 		String toName = waitListUser.getFirstName() + " " + waitListUser.getLastName();
 		String toEmail = waitListUser.getEmail();
 		String message = "You have moved up one in the waitlist for the book with the title " + bookWaitList.getTitle() + ".";
-		
+
 		/*
 		 Mailer.sendEmail(subject, fromName, fromEmail, toName, toEmail, message);
 		 */
@@ -42,9 +42,9 @@ public class UserObserver implements Observer{
 		String toName = waitListUser.getFirstName() + " " + waitListUser.getLastName();
 		String toEmail = waitListUser.getEmail();
 		String message = "The book with the title " + bookWaitList.getTitle() + " is available to be borrowed from the library.";
-		
+
 		/*
-		  Mailer.sendEmail(subject, fromName, fromEmail, toName, toEmail, message);
+		Mailer.sendEmail(subject, fromName, fromEmail, toName, toEmail, message);
 		 */
 	}
 	@Override

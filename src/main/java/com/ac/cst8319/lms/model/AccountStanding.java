@@ -2,6 +2,9 @@ package com.ac.cst8319.lms.model;
 
 import lombok.*;
 
+/**
+ * AccountStanding DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

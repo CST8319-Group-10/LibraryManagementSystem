@@ -2,6 +2,9 @@ package com.ac.cst8319.lms.model.Prototype;
 
 import com.ac.cst8319.lms.model.BookCopy;
 
+/**
+ * A helper class for cloning BookCopy objects.
+ */
 public class BookCopyClient {
 	
 	private BookCopy bookCopyPrototype;

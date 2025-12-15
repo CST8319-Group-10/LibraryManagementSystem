@@ -9,7 +9,9 @@ import jakarta.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-// Maps this servlet to the URL pattern "/BookServlet"
+/**
+ * Servlet for book CRUD operations.
+ */
 @WebServlet(name = "BookServlet", value = "/BookServlet")
 public class BookServlet extends HttpServlet {
     // Use the BookCatalog as an in-memory "database"

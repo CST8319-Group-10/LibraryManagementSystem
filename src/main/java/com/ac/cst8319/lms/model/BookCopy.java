@@ -6,6 +6,9 @@ import com.ac.cst8319.lms.model.Prototype.BookCopyClone;
 
 import lombok.*;
 
+/**
+ * DTO for Book Copies.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,6 +22,10 @@ public class BookCopy implements BookCopyClone {
     private String location;
     private LocalDate acquisitionDate;
 
+	/**
+	 * Construct a book copy from a builder.
+	 * @param builder The builder to construct a book copy from.
+	 */
 	public BookCopy(BookCopyBuilder builder) {
 		this.bookCopyId = builder.bookCopyId;
 		this.bookId = builder.bookId;
@@ -27,6 +34,11 @@ public class BookCopy implements BookCopyClone {
 		this.acquisitionDate = builder.acquisitionDate;
 	}
 
+	/**
+	 * Construct a book copy from the given bookId and statusId
+	 * @param bookId
+	 * @param statusId
+	 */
 	public BookCopy(Long bookId, int statusId) {
 		this.bookId = bookId;
 		this.statusId = statusId;

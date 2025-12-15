@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 
 import lombok.*;
 
+/**
+ * Checkout DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,7 +28,4 @@ public class Checkout {
     private BigDecimal lateFeeAssessed;
     private boolean lateFeePaid;
     private Instant createdAt;
-
-    /* TODO: Add the JOINed members as needed by services
-    */
 }

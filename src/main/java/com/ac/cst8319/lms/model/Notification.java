@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 
 import lombok.*;
 
+/**
+ * Notification DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

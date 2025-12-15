@@ -3,6 +3,9 @@ package com.ac.cst8319.lms.model;
 
 import lombok.*;
 
+/**
+ * Role DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

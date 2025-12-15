@@ -4,6 +4,9 @@ import java.time.Instant;
 
 import lombok.*;
 
+/**
+ * UserAccount DTO.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,6 +28,4 @@ public class UserAccount {
     private Instant lastLoginAt;
     private Instant lastReminderSentAt;
 
-    /* TODO: Add the JOINed members as needed by services
-    */
 }
