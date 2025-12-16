@@ -34,7 +34,7 @@
 		else {
 			for (Map.Entry<BookCopy, BookStatus> bookCopy : bookCopies.entrySet()) {
 	%>
-				<form action="${pageContext.request.contextPath}/user/placeHoldOnBook?bookTitle=<%=bookTitle%>" method="POST">			
+				<form action="${pageContext.request.contextPath}/user/placeHoldOnBook?bookTitle=<%=bookTitle%>" method="POST">		
 					<label for="bookCopyId">Book Copy Id</label> 
 					<input type="text" id="bookCopyId" name="bookCopyId" value="<%=bookCopy.getKey().getBookCopyId()%>">
 					<label for="status">Status</label> 
@@ -45,8 +45,10 @@
 				</form><br>
 	<%
 			}
+	%>
+		<p><%=message%></p>
+	<%
 		}
 	%>	
-	<p><%=message%></p>
 </body>
 </html>

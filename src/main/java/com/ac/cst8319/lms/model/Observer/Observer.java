@@ -4,7 +4,8 @@ import com.ac.cst8319.lms.model.Book;
 import com.ac.cst8319.lms.model.User;
 
 /**
- * Interface for Book WaitList Observer.
+ * Implementation of the  Book WaitList Observer interface for the observer pattern
+ * @author Ashleigh Eagleson
  */
 public interface Observer {
 
