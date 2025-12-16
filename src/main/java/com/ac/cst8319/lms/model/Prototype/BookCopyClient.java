@@ -2,6 +2,10 @@ package com.ac.cst8319.lms.model.Prototype;
 
 import com.ac.cst8319.lms.model.BookCopy;
 
+/**
+ * Implementation of the client for the prototype pattern
+ * @author Ashleigh Eagleson
+ */
 public class BookCopyClient {
 	
 	private BookCopy bookCopyPrototype;

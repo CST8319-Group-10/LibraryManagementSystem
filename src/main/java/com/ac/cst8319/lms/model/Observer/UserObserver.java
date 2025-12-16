@@ -6,7 +6,7 @@ import com.ac.cst8319.lms.model.User;
 //import com.ac.cst8319.lms.util.*;
 
 /**
- * Implementation for the concrete observer of the observer pattern
+ * Implementation of the concrete observer for the observer pattern
  * @author Ashleigh Eagleson
  */
 public class UserObserver implements Observer{
@@ -47,6 +47,10 @@ public class UserObserver implements Observer{
 		  Mailer.sendEmail(subject, fromName, fromEmail, toName, toEmail, message);
 		 */
 	}
+	/**
+	 * Set the user who is an observer
+	 * @param waitListUser the user who is an observer
+	 */
 	@Override
 	public void setWaitListUser(User waitListUser) {
 		this.waitListUser = waitListUser;
@@ -63,7 +67,7 @@ public class UserObserver implements Observer{
 
 	/**
 	 * Return the book that the users are observing
-	 * @param bookWaitList the book that the users are observing
+	 * @param bookWaitList the book that the users observe
 	 */
 	@Override
 	public void setBookWaitList(Book bookWaitList) {
@@ -73,7 +77,7 @@ public class UserObserver implements Observer{
 
 	/**
 	 * Update all the observers that the wait list has been updated
-	 * @param bookWaitList the book that the users are observing
+	 * @param bookWaitList the book that the users observe
 	 * @param nextUser the user who is first in a book's wait list
 	 */
 	@Override

@@ -9,7 +9,8 @@ import com.ac.cst8319.lms.model.Observer.Observer;
 import com.ac.cst8319.lms.model.User;
 
 /**
- * Implementation for the concrete subject of the observer pattern
+ * Implementation of the concrete subject for the observer pattern
+ * @author Ashleigh Eagleson
  */
 public class BookWaitListSubject implements Subject{
 
@@ -47,7 +48,7 @@ public class BookWaitListSubject implements Subject{
 	
 	/**
 	 * Set the subject to be a book's wait list
-	 * @param newBookWaitList
+	 * @param newBookWaitList the subject that is observed
 	 */
 	@Override
 	public void setBookWaitList(Book newBookWaitList) {
@@ -80,6 +81,4 @@ public class BookWaitListSubject implements Subject{
 	public List<Observer> getObservers(){
 		return this.observers;
 	}
-
-
 }
