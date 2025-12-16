@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +15,9 @@ import com.ac.cst8319.lms.model.Book;
 import com.ac.cst8319.lms.model.BookBuilder;
 import com.ac.cst8319.lms.model.BookCopy;
 import com.ac.cst8319.lms.model.BookStatus;
+import com.ac.cst8319.lms.model.UserAccount;
 import com.ac.cst8319.lms.service.FindBookService;
+import com.ac.cst8319.lms.util.SessionUtil;
 
 /**
  * Servlet implementation class CheckBookAvailability
@@ -27,14 +31,12 @@ public class CheckBookAvailability extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		/*
-		HTTPSession session = request.getSession(false);
+		HttpSession session = request.getSession(false);
 		UserAccount currentUser = SessionUtil.getCurrentUser(session);
 		
 		if(currentUser == null){
 			response.sendRedirect(request.getContextPath() + "/login");
 		}
-		*/
 		
 		String bookTitle = request.getParameter("bookTitle");
 		Book book = new BookBuilder().setTitle(bookTitle).build();	

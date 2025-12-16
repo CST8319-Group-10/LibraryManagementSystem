@@ -5,6 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -14,8 +16,10 @@ import com.ac.cst8319.lms.model.BookCopyBuilder;
 import com.ac.cst8319.lms.model.BookStatus;
 import com.ac.cst8319.lms.model.BookStatusBuilder;
 import com.ac.cst8319.lms.model.User;
+import com.ac.cst8319.lms.model.UserAccount;
 import com.ac.cst8319.lms.model.WaitList;
 import com.ac.cst8319.lms.service.HoldBookService;
+import com.ac.cst8319.lms.util.SessionUtil;
 
 /**
  * Servlet implementation class HoldOnBook
@@ -29,14 +33,12 @@ public class HoldOnBook extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
-		/*
-		HTTPSession session = request.getSession(false);
+		HttpSession session = request.getSession(false);
 		UserAccount currentUser = SessionUtil.getCurrentUser(session);
 		
 		if(currentUser == null){
 			response.sendRedirect(request.getContextPath() + "/login");
 		}
-		*/
 		
 		Long bookCopyId = Long.parseLong(request.getParameter("bookCopyId"));
 		BookCopy bookCopy = new BookCopyBuilder().setBookCopyId(bookCopyId).build();
