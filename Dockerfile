@@ -4,8 +4,8 @@ FROM tomcat:10.1-jre17-temurin-focal
 # Remove default Tomcat apps to avoid conflicts
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy your built WAR (build it locally first with mvn/gradle)
-COPY target/myapp.war /usr/local/tomcat/webapps/ROOT.war  # Adjust path if Gradle: build/libs/myapp.war
+# Copy your built WAR
+COPY target/lms.war /usr/local/tomcat/webapps/ROOT.war
 
 # Expose Tomcat port
 EXPOSE 8080
