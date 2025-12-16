@@ -124,8 +124,8 @@
         <div class="header">
             <h1 class="welcome">👤 Member Dashboard</h1>
             <div class="nav">
-                <c:if test="${not empty sessionScope.user}">
-                    <span>Welcome, ${sessionScope.user.firstName} ${sessionScope.user.lastName}!</span>
+                <c:if test="${not empty sessionScope.currentUser}">
+                    <span>Welcome, ${sessionScope.currentUser.firstName} ${sessionScope.currentUser.lastName}!</span>
                 </c:if>
                 <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
             </div>
@@ -141,20 +141,27 @@
 
         <div class="user-info">
             <h3>👤 Account Information</h3>
-            <c:if test="${not empty sessionScope.user}">
-                <p><strong>Username:</strong> ${sessionScope.user.username}</p>
-                <p><strong>Email:</strong> ${sessionScope.user.email}</p>
-                <p><strong>Role:</strong> ${sessionScope.user.role.name}</p>
-                <p><strong>Phone:</strong> ${sessionScope.user.phoneNumber != null ? sessionScope.user.phoneNumber : 'Not provided'}</p>
+            <c:if test="${not empty sessionScope.currentUser}">
+                <p><strong>Username:</strong> ${sessionScope.currentUser.email}</p>
+                <p><strong>Email:</strong> ${sessionScope.currentUser.email}</p>
+                <p><strong>Role:</strong>
+                    <c:choose>
+                        <c:when test="${sessionScope.currentUser.roleId == 4}">Administrator</c:when>
+                        <c:when test="${sessionScope.currentUser.roleId == 3}">Librarian</c:when>
+                        <c:when test="${sessionScope.currentUser.roleId == 2}">Registered User</c:when>
+                        <c:otherwise>Guest</c:otherwise>
+                    </c:choose>
+                </p>
+                <p><strong>Phone:</strong> ${sessionScope.currentUser.phone != null && sessionScope.currentUser.phone != '' ? sessionScope.currentUser.phone : 'Not provided'}</p>
                 <p><strong>Account Standing:</strong>
                     <c:choose>
-                        <c:when test="${sessionScope.user.accountStanding == 1}">
+                        <c:when test="${sessionScope.currentUser.accountStanding == 1}">
                             <span class="badge badge-success">Good Standing</span>
                         </c:when>
-                        <c:when test="${sessionScope.user.accountStanding == 2}">
+                        <c:when test="${sessionScope.currentUser.accountStanding == 2}">
                             <span class="badge badge-warning">Suspended</span>
                         </c:when>
-                        <c:when test="${sessionScope.user.accountStanding == 3}">
+                        <c:when test="${sessionScope.currentUser.accountStanding == 3}">
                             <span class="badge badge-danger">Banned</span>
                         </c:when>
                         <c:otherwise>
@@ -169,9 +176,9 @@
             <div class="card">
                 <h3>📚 Book Management</h3>
                 <div class="features">
-                    <a href="${pageContext.request.contextPath}/user/searchForBook" class="feature-item">Search Books</a>
+                    <a href="${pageContext.request.contextPath}/searchForBook" class="feature-item">Search Books</a>
+                    <a href="${pageContext.request.contextPath}/checkBookAvailability" class="feature-item">Check Availability</a>
                     <div class="feature-item" onclick="alert('Browse Catalog feature coming soon')">Browse Catalog</div>
-                    <div class="feature-item" onclick="alert('View Availability feature coming soon')">View Availability</div>
                 </div>
             </div>
 
@@ -187,7 +194,7 @@
             <div class="card">
                 <h3>⏰ Reservations & Holds</h3>
                 <div class="features">
-                    <div class="feature-item" onclick="alert('Place Holds feature coming soon')">Place Holds</div>
+                    <a href="${pageContext.request.contextPath}/placeHoldBook" class="feature-item">Place Hold on Book</a>
                     <div class="feature-item" onclick="alert('View Waitlist feature coming soon')">View Waitlist</div>
                     <div class="feature-item" onclick="alert('Reservation Status feature coming soon')">Reservation Status</div>
                 </div>
@@ -196,7 +203,7 @@
             <div class="card">
                 <h3>👤 Account Management</h3>
                 <div class="features">
-                    <div class="feature-item" onclick="alert('Profile Settings feature coming soon')">Profile Settings</div>
+                    <a href="${pageContext.request.contextPath}/user/profile" class="feature-item">Profile Settings</a>
                     <a href="${pageContext.request.contextPath}/user/change-password" class="feature-item">Change Password</a>
                     <div class="feature-item" onclick="alert('Notification Preferences feature coming soon')">Notification Preferences</div>
                 </div>

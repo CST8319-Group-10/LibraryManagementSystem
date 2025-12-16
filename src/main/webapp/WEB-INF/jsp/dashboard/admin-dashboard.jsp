@@ -109,8 +109,8 @@
         <div class="header">
             <h1 class="welcome">🔧 Administrator Dashboard</h1>
             <div class="nav">
-                <c:if test="${not empty sessionScope.user}">
-                    <span>Welcome, ${sessionScope.user.firstName} ${sessionScope.user.lastName}!</span>
+                <c:if test="${not empty sessionScope.currentUser}">
+                    <span>Welcome, ${sessionScope.currentUser.firstName} ${sessionScope.currentUser.lastName}!</span>
                 </c:if>
                 <a href="${pageContext.request.contextPath}/logout">🚪 Logout</a>
             </div>
@@ -126,11 +126,18 @@
 
         <div class="user-info">
             <h3>👤 Account Information</h3>
-            <c:if test="${not empty sessionScope.user}">
-                <p><strong>Username:</strong> ${sessionScope.user.username}</p>
-                <p><strong>Email:</strong> ${sessionScope.user.email}</p>
-                <p><strong>Role:</strong> ${sessionScope.user.role.name}</p>
-                <p><strong>Phone:</strong> ${sessionScope.user.phoneNumber != null ? sessionScope.user.phoneNumber : 'Not provided'}</p>
+            <c:if test="${not empty sessionScope.currentUser}">
+                <p><strong>Username:</strong> ${sessionScope.currentUser.email}</p>
+                <p><strong>Email:</strong> ${sessionScope.currentUser.email}</p>
+                <p><strong>Role:</strong>
+                    <c:choose>
+                        <c:when test="${sessionScope.currentUser.roleId == 4}">Administrator</c:when>
+                        <c:when test="${sessionScope.currentUser.roleId == 3}">Librarian</c:when>
+                        <c:when test="${sessionScope.currentUser.roleId == 2}">Registered User</c:when>
+                        <c:otherwise>Guest</c:otherwise>
+                    </c:choose>
+                </p>
+                <p><strong>Phone:</strong> ${sessionScope.currentUser.phone != null && sessionScope.currentUser.phone != '' ? sessionScope.currentUser.phone : 'Not provided'}</p>
             </c:if>
         </div>
 
@@ -148,9 +155,9 @@
             <div class="card">
                 <h3>📚 Catalog Management</h3>
                 <div class="features">
-                    <a href="${pageContext.request.contextPath}/librarian/books/new" class="feature-item">Add New Books</a>
                     <a href="${pageContext.request.contextPath}/librarian/books" class="feature-item">Manage Books</a>
-                    <a href="${pageContext.request.contextPath}/librarian/books" class="feature-item">Update Book Details</a>
+                    <a href="${pageContext.request.contextPath}/searchForBook" class="feature-item">Search Books</a>
+                    <a href="${pageContext.request.contextPath}/checkBookAvailability" class="feature-item">Check Availability</a>
                 </div>
             </div>
 
