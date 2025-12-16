@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 /**
  * Interface for cloneable BookCopy objects.
+ * Implementation of the prototype interface for the prototype pattern
+ * @author Ashleigh Eagleson
  */
 public interface BookCopyClone {
 

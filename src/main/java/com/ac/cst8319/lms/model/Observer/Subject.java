@@ -6,7 +6,8 @@ import com.ac.cst8319.lms.model.Book;
 import com.ac.cst8319.lms.model.User;
 
 /**
- * Interface for the subject of the observer pattern
+ * Implementation of the subject interface for the observer pattern
+ * @author Ashleigh Eagleson
  */
 public interface Subject {
 

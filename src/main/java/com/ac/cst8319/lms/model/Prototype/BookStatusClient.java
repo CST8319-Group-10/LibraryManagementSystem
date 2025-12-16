@@ -3,7 +3,9 @@ package com.ac.cst8319.lms.model.Prototype;
 import com.ac.cst8319.lms.model.BookStatus;
 
 /**
- * A helper class for cloning BookStatus objects.
+ * A helper class for cloning BookStatus objects. Implementation of the
+ * client for the prototype pattern.
+ * @author Ashleigh Eagleson
  */
 public class BookStatusClient {
 	
