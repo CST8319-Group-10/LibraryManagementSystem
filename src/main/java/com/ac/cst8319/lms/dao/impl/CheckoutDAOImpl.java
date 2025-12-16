@@ -492,7 +492,7 @@ public class CheckoutDAOImpl implements CheckoutDAO {
      * Helper method to map ResultSet to Book object.
      */
     private Book mapResultSetToBook(ResultSet rs, String prefix) throws SQLException {
-        Book book = new Book();
+        Book book = new Book(null);
         book.setBookId(rs.getLong(prefix + "BookID"));
         book.setIsbn(rs.getString(prefix + "ISBN"));
         book.setTitle(rs.getString(prefix + "Title"));

@@ -21,7 +21,7 @@ public class BookCopyClient {
 	 * Cloning the prototype to create a book copy
 	 * @return the book copy that was created by cloning the prototype
 	 */
-	public BookCopy createBookCopy() {
+	public BookCopyClone createBookCopy() {
 		return bookCopyPrototype.clone();
 	}
 }

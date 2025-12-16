@@ -204,7 +204,7 @@ public class BookDAOImpl implements BookDAO {
             stmt.setObject(8, Instant.now());
 
             if (book.getUpdatedBy() != null) {
-                stmt.setLong(9, book.getUpdatedBy());
+                stmt.setLong(9, (long) book.getUpdatedBy());
             } else {
                 stmt.setNull(9, Types.BIGINT);
             }
@@ -252,7 +252,7 @@ public class BookDAOImpl implements BookDAO {
      * Helper method to map ResultSet to Book object.
      */
     private Book mapResultSetToBook(ResultSet rs) throws SQLException {
-        Book book = new Book();
+        Book book = new Book(null);
         book.setBookId(rs.getLong("BookID"));
         book.setIsbn(rs.getString("ISBN"));
         book.setTitle(rs.getString("Title"));

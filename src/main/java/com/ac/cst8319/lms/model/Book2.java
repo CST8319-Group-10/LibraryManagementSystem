@@ -19,6 +19,10 @@ public class Book2 {
     }
     
     public Book2() {
+        this.ID = 0;
+        this.Title = null;
+        this.Author = null;
+        this.isAvailable = false;
     }
 
     // Methods (Getters and Setters are sufficient for JSP/Servlet interaction)

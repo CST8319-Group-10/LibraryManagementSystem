@@ -162,7 +162,7 @@ public class FindBookDao {
 					}
 					else if(countAvailable >= 1) {
 						BookCopyClient bookCopyClient = new BookCopyClient(bookCopyPrototypeAvailable);
-						bookCopyClone = bookCopyClient.createBookCopy();
+						bookCopyClone = (BookCopy) bookCopyClient.createBookCopy();
 						bookCopyClone.setBookCopyId(rs.getLong("BookCopyID"));
 						bookCopyClone.setLocation(rs.getString("Location"));
 						
@@ -183,7 +183,7 @@ public class FindBookDao {
 					}
 					else if(countUnavailable >= 1) {
 						BookCopyClient bookCopyClient = new BookCopyClient(bookCopyPrototypeUnavailable);
-						bookCopyClone = bookCopyClient.createBookCopy();
+						bookCopyClone = (BookCopy) bookCopyClient.createBookCopy();
 						bookCopyClone.setBookCopyId(rs.getLong("BookCopyID"));
 						bookCopyClone.setLocation(rs.getString("Location"));
 						

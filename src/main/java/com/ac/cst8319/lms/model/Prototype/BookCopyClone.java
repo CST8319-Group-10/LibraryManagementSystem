@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * Interface for cloneable BookCopy objects.
  */
-public interface BookCopyClone {
+public interface BookCopyClone extends Cloneable {
 
 	/**
 	 * Clone the BookCopy object.
