@@ -18,7 +18,7 @@
 	<nav>
 		<a href="${pageContext.request.contextPath}/user/browseByGenre?action=access">Browse</a> 
 		<a href="${pageContext.request.contextPath}/user/searchForBook?action=access">Search</a>
-		<a href="${pageContext.request.contextPath}/user/returnBookUpdateWaitList?action=access">Update Wait List</a>
+		<a href="${pageContext.request.contextPath}/librarian/returnBookUpdateWaitList?action=access">Update Wait List</a>
 	</nav>
 	
 	<h2>Search For Books</h2><br>

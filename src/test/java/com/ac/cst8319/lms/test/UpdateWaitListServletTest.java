@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.ac.cst8319.lms.servlet.user.UpdateWaitList;
+import com.ac.cst8319.lms.servlet.librarian.UpdateWaitList;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
