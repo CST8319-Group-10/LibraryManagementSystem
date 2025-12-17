@@ -176,9 +176,9 @@
             <div class="card">
                 <h3>📚 Book Management</h3>
                 <div class="features">
-                    <a href="${pageContext.request.contextPath}/searchForBook" class="feature-item">Search Books</a>
-                    <a href="${pageContext.request.contextPath}/checkBookAvailability" class="feature-item">Check Availability</a>
-                    <div class="feature-item" onclick="alert('Browse Catalog feature coming soon')">Browse Catalog</div>
+                    <a href="${pageContext.request.contextPath}/user/searchForBook" class="feature-item">Search Books</a>
+                    <a href="${pageContext.request.contextPath}/user/checkBookAvailability" class="feature-item">Check Availability</a>
+                    <a href="${pageContext.request.contextPath}/user/browseByGenre" class="feature-item">Browse Catalog</a>
                 </div>
             </div>
 
@@ -194,7 +194,7 @@
             <div class="card">
                 <h3>⏰ Reservations & Holds</h3>
                 <div class="features">
-                    <a href="${pageContext.request.contextPath}/placeHoldBook" class="feature-item">Place Hold on Book</a>
+                    <a href="${pageContext.request.contextPath}/user/placeHoldOnBook" class="feature-item">Place Hold on Book</a>
                     <div class="feature-item" onclick="alert('View Waitlist feature coming soon')">View Waitlist</div>
                     <div class="feature-item" onclick="alert('Reservation Status feature coming soon')">Reservation Status</div>
                 </div>
