@@ -176,9 +176,9 @@
             <div class="card">
                 <h3>📚 Book Management</h3>
                 <div class="features">
-                    <a href="${pageContext.request.contextPath}/user/searchForBook" class="feature-item">Search Books</a>
+                    <a href="${pageContext.request.contextPath}/user/searchForBook?action=access" class="feature-item">Search Books</a>
                     <a href="${pageContext.request.contextPath}/user/checkBookAvailability" class="feature-item">Check Availability</a>
-                    <a href="${pageContext.request.contextPath}/user/browseByGenre" class="feature-item">Browse Catalog</a>
+                    <a href="${pageContext.request.contextPath}/user/browseByGenre?action=access" class="feature-item">Browse Catalog</a>
                 </div>
             </div>
 

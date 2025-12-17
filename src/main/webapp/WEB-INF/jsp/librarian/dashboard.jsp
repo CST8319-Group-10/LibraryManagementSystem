@@ -149,8 +149,8 @@
                 <h3>📚 Catalog Management</h3>
                 <div class="features">
                     <a href="${pageContext.request.contextPath}/librarian/books" class="feature-item">Manage Books</a>
-                    <a href="${pageContext.request.contextPath}/searchForBook" class="feature-item">Search Books</a>
-                    <a href="${pageContext.request.contextPath}/checkBookAvailability" class="feature-item">Check Availability</a>
+                    <a href="${pageContext.request.contextPath}/user/searchForBook?action=access" class="feature-item">Search Books</a>
+                    <a href="${pageContext.request.contextPath}/user/checkBookAvailability" class="feature-item">Check Availability</a>
                 </div>
             </div>
 
@@ -167,7 +167,7 @@
                 <h3>⏰ Reservation System</h3>
                 <div class="features">
                     <div class="feature-item" onclick="alert('Manage Holds feature coming soon')">Manage Holds</div>
-                    <div class="feature-item" onclick="alert('Waitlist Management feature coming soon')">Waitlist Management</div>
+                    <a href="${pageContext.request.contextPath}/librarian/returnBookUpdateWaitList?action=access" class="feature-item">Waitlist Management</a>
                     <div class="feature-item" onclick="alert('Notify Members feature coming soon')">Notify Members</div>
                 </div>
             </div>
